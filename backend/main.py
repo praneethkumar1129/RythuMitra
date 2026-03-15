@@ -33,7 +33,8 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:3000",
-    os.getenv("FRONTEND_URL", ""),   # set to your Netlify URL in Render env vars
+    "https://rythumitra.netlify.app",
+    os.getenv("FRONTEND_URL", ""),
 ]
 
 app.add_middleware(

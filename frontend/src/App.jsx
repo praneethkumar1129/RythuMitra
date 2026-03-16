@@ -14,6 +14,7 @@ import Weather          from './pages/Weather'
 import GovSchemes       from './pages/GovSchemes'
 
 import { Sprout, Home, Leaf, Bug, BarChart2, Briefcase, Cloud, BookOpen, Menu, X, User, LogIn } from 'lucide-react'
+import ChatBot from './components/ChatBot'
 
 const NAV = [
   { to: '/',        label: 'Home',    icon: Home },
@@ -137,6 +138,7 @@ function AppRoutes() {
           <Route path="*"        element={<Navigate to="/" replace />} />
         </Routes>
       </main>
+      <ChatBot />
     </>
   )
 }

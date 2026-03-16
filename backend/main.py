@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from routes import farmers, crops, disease, jobs, misc
+from routes import farmers, crops, disease, jobs, misc, chatbot
 
 app = FastAPI(
     title="RythuMitra API",
@@ -26,6 +26,7 @@ app.include_router(crops.router)
 app.include_router(disease.router)
 app.include_router(jobs.router)
 app.include_router(misc.router)
+app.include_router(chatbot.router)
 
 @app.get("/")
 def root():

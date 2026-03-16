@@ -29,10 +29,10 @@ const NAV = [
 
 const linkStyle = ({ isActive }) => ({
   display: 'flex', alignItems: 'center', gap: '.3rem',
-  padding: '.4rem .7rem', borderRadius: 8, textDecoration: 'none',
-  color: '#fff', fontSize: '.85rem', fontWeight: 500,
-  background: isActive ? 'rgba(255,255,255,.22)' : 'transparent',
-  transition: 'background .15s',
+  padding: '.38rem .7rem', borderRadius: 7, textDecoration: 'none',
+  color: isActive ? '#fff' : 'rgba(255,255,255,.82)', fontSize: '.83rem', fontWeight: isActive ? 600 : 400,
+  background: isActive ? 'rgba(255,255,255,.2)' : 'transparent',
+  transition: 'all .15s',
 })
 
 function Navbar() {
@@ -40,55 +40,61 @@ function Navbar() {
   const { isLoggedIn, name } = useAuth()
 
   return (
-    <nav style={{ background: 'var(--green)', color: '#fff', position: 'sticky', top: 0, zIndex: 100, boxShadow: '0 2px 8px rgba(0,0,0,.15)' }}>
-      <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '.75rem 1rem' }}>
+    <nav style={{
+      background: 'var(--green)', color: '#fff', position: 'sticky', top: 0, zIndex: 100,
+      boxShadow: '0 1px 0 rgba(255,255,255,.08), 0 4px 16px rgba(0,0,0,.18)'
+    }}>
+      <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '.65rem 1rem' }}>
 
-        <NavLink to="/" style={{ display: 'flex', alignItems: 'center', gap: '.5rem', fontWeight: 800, fontSize: '1.2rem', color: '#fff', textDecoration: 'none' }}>
-          <Sprout size={24} /> RythuMitra
+        <NavLink to="/" style={{ display: 'flex', alignItems: 'center', gap: '.55rem', fontWeight: 800, fontSize: '1.18rem', color: '#fff', textDecoration: 'none', letterSpacing: '-.3px' }}>
+          <div style={{ background: 'rgba(255,255,255,.15)', borderRadius: 8, padding: '5px', display: 'flex', alignItems: 'center' }}>
+            <Sprout size={18} />
+          </div>
+          Rythu Seva
         </NavLink>
 
-        <button className="btn" id="menu-btn"
-          style={{ background: 'transparent', color: '#fff', display: 'none' }}
+        <button id="menu-btn"
+          style={{ background: 'rgba(255,255,255,.12)', color: '#fff', display: 'none', border: 'none', borderRadius: 8, padding: '.4rem .5rem', cursor: 'pointer' }}
           onClick={() => setOpen(o => !o)}>
-          {open ? <X size={22} /> : <Menu size={22} />}
+          {open ? <X size={20} /> : <Menu size={20} />}
         </button>
 
-        <ul style={{ display: 'flex', gap: '.2rem', listStyle: 'none', flexWrap: 'wrap', alignItems: 'center' }} id="nav-links">
+        <ul style={{ display: 'flex', gap: '.05rem', listStyle: 'none', flexWrap: 'wrap', alignItems: 'center', margin: 0, padding: 0 }} id="nav-links">
           {NAV.map(({ to, label, icon: Icon }) => (
             <li key={to}>
               <NavLink to={to} end={to === '/'} style={linkStyle}>
-                <Icon size={15} /> {label}
+                <Icon size={14} /> {label}
               </NavLink>
             </li>
           ))}
 
-          {/* Logged-in farmer name */}
           {isLoggedIn && (
-            <li style={{ borderLeft: '1px solid rgba(255,255,255,.3)', paddingLeft: '.6rem', marginLeft: '.2rem',
-              display: 'flex', alignItems: 'center', gap: '.3rem' }}>
-              <span style={{ fontSize: '.8rem', opacity: .8 }}>👋</span>
-              <span style={{ fontSize: '.85rem', fontWeight: 700 }}>{name}</span>
+            <li style={{ borderLeft: '1px solid rgba(255,255,255,.2)', paddingLeft: '.65rem', marginLeft: '.4rem', display: 'flex', alignItems: 'center', gap: '.4rem' }}>
+              <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(255,255,255,.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '.8rem', fontWeight: 700, border: '1.5px solid rgba(255,255,255,.3)' }}>
+                {name?.[0]?.toUpperCase()}
+              </div>
+              <span style={{ fontSize: '.83rem', fontWeight: 600 }}>{name}</span>
             </li>
           )}
 
-          {/* Profile / Login */}
           <li>
             {isLoggedIn ? (
               <NavLink to="/profile" style={({ isActive }) => ({
                 ...linkStyle({ isActive }),
-                fontWeight: 700,
-                background: isActive ? 'rgba(255,255,255,.3)' : 'rgba(255,255,255,.15)',
+                background: isActive ? 'rgba(255,255,255,.25)' : 'rgba(255,255,255,.12)',
+                border: '1px solid rgba(255,255,255,.2)',
+                fontWeight: 600,
               })}>
-                <User size={15} /> Profile
+                <User size={14} /> Profile
               </NavLink>
             ) : (
               <NavLink to="/auth" style={() => ({
                 display: 'flex', alignItems: 'center', gap: '.3rem',
-                padding: '.4rem .8rem', borderRadius: 8, textDecoration: 'none',
-                color: 'var(--green)', fontSize: '.85rem', fontWeight: 700,
-                background: '#fff', transition: 'opacity .15s',
+                padding: '.38rem .85rem', borderRadius: 7, textDecoration: 'none',
+                color: 'var(--green)', fontSize: '.83rem', fontWeight: 700,
+                background: '#fff', boxShadow: '0 1px 4px rgba(0,0,0,.12)',
               })}>
-                <LogIn size={15} /> Login
+                <LogIn size={14} /> Login
               </NavLink>
             )}
           </li>
@@ -97,14 +103,13 @@ function Navbar() {
       <style>{`
         @media(max-width:768px){
           #menu-btn { display:flex !important }
-          #nav-links { display:${open ? 'flex' : 'none'} !important; flex-direction:column; padding:.5rem 1rem 1rem; width:100% }
+          #nav-links { display:${open ? 'flex' : 'none'} !important; flex-direction:column; padding:.5rem 1rem 1rem; width:100%; gap:.15rem; border-top:1px solid rgba(255,255,255,.1); margin-top:.1rem }
         }
       `}</style>
     </nav>
   )
 }
 
-// Redirect to /auth if not logged in, remembers where user was going
 function Protected({ children }) {
   const { isLoggedIn } = useAuth()
   const location = useLocation()
@@ -112,7 +117,6 @@ function Protected({ children }) {
   return children
 }
 
-// Redirect to / if already logged in
 function GuestOnly({ children }) {
   const { isLoggedIn } = useAuth()
   if (isLoggedIn) return <Navigate to="/" replace />
@@ -123,7 +127,7 @@ function AppRoutes() {
   return (
     <>
       <Navbar />
-      <main className="container" style={{ padding: '1.5rem 1rem' }}>
+      <main className="container" style={{ padding: '2rem 1rem' }}>
         <Routes>
           <Route path="/"        element={<Dashboard />} />
           <Route path="/auth"    element={<GuestOnly><Auth /></GuestOnly>} />

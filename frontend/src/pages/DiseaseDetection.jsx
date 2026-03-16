@@ -1,32 +1,25 @@
 import { useState, useRef } from 'react'
-import { Bug, Upload, X, ExternalLink } from 'lucide-react'
+import { Bug, Upload, X, ExternalLink, ShoppingCart, Play } from 'lucide-react'
 import api from '../api'
 import toast from 'react-hot-toast'
 
 const CROPS = ['Rice', 'Cotton', 'Tomato', 'Chilli', 'Maize', 'Groundnut', 'Wheat', 'Soybean', 'Onion', 'Sugarcane']
-
 const SEVERITY_COLOR = { High: 'badge-red', Medium: 'badge-amber', Low: 'badge-green' }
+const SEVERITY_BORDER = { High: 'var(--red)', Medium: 'var(--amber)', Low: 'var(--green)' }
 
 export default function DiseaseDetection() {
   const [cropType, setCropType] = useState('Rice')
-  const [image, setImage] = useState(null)
-  const [preview, setPreview] = useState(null)
-  const [result, setResult] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [image, setImage]       = useState(null)
+  const [preview, setPreview]   = useState(null)
+  const [result, setResult]     = useState(null)
+  const [loading, setLoading]   = useState(false)
   const fileRef = useRef()
 
   const handleFile = (file) => {
     if (!file) return
     if (!file.type.startsWith('image/')) return toast.error('Please upload an image file')
     if (file.size > 5 * 1024 * 1024) return toast.error('Image must be under 5MB')
-    setImage(file)
-    setPreview(URL.createObjectURL(file))
-    setResult(null)
-  }
-
-  const handleDrop = (e) => {
-    e.preventDefault()
-    handleFile(e.dataTransfer.files[0])
+    setImage(file); setPreview(URL.createObjectURL(file)); setResult(null)
   }
 
   const submit = async () => {
@@ -39,102 +32,109 @@ export default function DiseaseDetection() {
       fd.append('image', image)
       const { data } = await api.post('/api/detect_disease', fd)
       setResult(data)
-    } catch {
-      toast.error('Detection failed. Please try again.')
-    } finally {
-      setLoading(false)
-    }
+    } catch { toast.error('Detection failed. Please try again.') }
+    finally { setLoading(false) }
   }
 
   const clear = () => { setImage(null); setPreview(null); setResult(null) }
 
   return (
-    <div>
-      <div className="page-title"><Bug size={24} /> Plant Disease Detection</div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem' }}>
+        <div style={{ background: '#fee2e2', borderRadius: 10, padding: '8px', display: 'flex' }}>
+          <Bug size={22} color="var(--red)" />
+        </div>
+        <div>
+          <h1 style={{ fontSize: '1.4rem', fontWeight: 800, letterSpacing: '-.3px' }}>Disease Detection</h1>
+          <p style={{ fontSize: '.83rem', color: 'var(--text-muted)', marginTop: '.1rem' }}>Upload a plant photo for instant AI diagnosis</p>
+        </div>
+      </div>
 
       <div className="grid-2" style={{ alignItems: 'start' }}>
+
         {/* Upload Panel */}
-        <div className="card">
-          <div className="form-group">
-            <label>Select Crop Type</label>
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div className="form-group" style={{ marginBottom: 0 }}>
+            <label>Crop Type</label>
             <select value={cropType} onChange={e => setCropType(e.target.value)}>
               {CROPS.map(c => <option key={c}>{c}</option>)}
             </select>
           </div>
 
           <div
-            onDrop={handleDrop}
+            onDrop={e => { e.preventDefault(); handleFile(e.dataTransfer.files[0]) }}
             onDragOver={e => e.preventDefault()}
             onClick={() => !preview && fileRef.current.click()}
             style={{
-              border: '2px dashed var(--border)', borderRadius: 12, padding: '2rem',
+              border: `2px dashed ${preview ? 'var(--green)' : 'var(--border)'}`,
+              borderRadius: 12, padding: preview ? '1rem' : '2.5rem',
               textAlign: 'center', cursor: preview ? 'default' : 'pointer',
-              background: preview ? 'transparent' : 'var(--bg)', position: 'relative',
-              transition: 'border-color .15s',
+              background: preview ? 'var(--green-pale)' : 'var(--bg)',
+              position: 'relative', transition: 'all .2s',
             }}
             onMouseEnter={e => !preview && (e.currentTarget.style.borderColor = 'var(--green)')}
-            onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}
+            onMouseLeave={e => !preview && (e.currentTarget.style.borderColor = 'var(--border)')}
           >
             <input ref={fileRef} type="file" accept="image/*" style={{ display: 'none' }}
               onChange={e => handleFile(e.target.files[0])} />
-
             {preview ? (
               <>
-                <img src={preview} alt="plant" style={{ maxHeight: 220, maxWidth: '100%', borderRadius: 8, objectFit: 'cover' }} />
-                <button className="btn btn-danger btn-sm" onClick={clear}
-                  style={{ position: 'absolute', top: 8, right: 8 }}>
+                <img src={preview} alt="plant" style={{ maxHeight: 200, maxWidth: '100%', borderRadius: 8, objectFit: 'cover', display: 'block', margin: '0 auto' }} />
+                <button onClick={clear} style={{ position: 'absolute', top: 8, right: 8, background: 'var(--red)', color: '#fff', border: 'none', borderRadius: 6, padding: '4px 8px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
                   <X size={14} />
                 </button>
               </>
             ) : (
               <>
-                <Upload size={40} color="var(--text-muted)" style={{ marginBottom: '.5rem' }} />
-                <p style={{ fontWeight: 600 }}>Drop plant image here or click to upload</p>
-                <p style={{ fontSize: '.8rem', color: 'var(--text-muted)' }}>JPEG, PNG, WEBP — max 5MB</p>
+                <div style={{ width: 52, height: 52, background: 'var(--border)', borderRadius: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto .75rem' }}>
+                  <Upload size={24} color="var(--text-muted)" />
+                </div>
+                <p style={{ fontWeight: 600, fontSize: '.9rem', marginBottom: '.25rem' }}>Drop image here or click to upload</p>
+                <p style={{ fontSize: '.78rem', color: 'var(--text-muted)' }}>JPEG, PNG, WEBP — max 5MB</p>
               </>
             )}
           </div>
 
-          <button className="btn btn-primary" disabled={!image || loading}
-            onClick={submit} style={{ width: '100%', justifyContent: 'center', marginTop: '1rem' }}>
-            {loading ? 'Analyzing...' : '🔍 Detect Disease'}
+          <button className="btn btn-primary" disabled={!image || loading} onClick={submit} style={{ width: '100%', justifyContent: 'center' }}>
+            {loading ? 'Analyzing...' : <><Bug size={16} /> Detect Disease</>}
           </button>
         </div>
 
-        {/* Result Panel */}
+        {/* Result */}
         <div>
           {loading && <div className="spinner" />}
 
           {result && (
-            <div className="card">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+            <div className="card fade-up" style={{ borderTop: `4px solid ${SEVERITY_BORDER[result.severity] || 'var(--amber)'}` }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem' }}>
                 <div>
-                  <h3 style={{ fontWeight: 800, fontSize: '1.2rem', color: 'var(--red)' }}>{result.disease_name}</h3>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '.85rem' }}>{result.crop_type} • Confidence: {result.confidence}</p>
+                  <h2 style={{ fontWeight: 800, fontSize: '1.2rem', color: 'var(--red)', marginBottom: '.2rem' }}>{result.disease_name}</h2>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '.83rem' }}>{result.crop_type} · Confidence: {result.confidence}</p>
                 </div>
-                <span className={`badge ${SEVERITY_COLOR[result.severity] || 'badge-amber'}`}>
-                  {result.severity} Severity
-                </span>
+                <span className={`badge ${SEVERITY_COLOR[result.severity] || 'badge-amber'}`}>{result.severity} Severity</span>
               </div>
 
-              <Section title="🔬 Symptoms" content={result.symptoms} />
-              <Section title="💊 Treatment" content={result.treatment} />
-              <Section title="🌿 Organic Remedy" content={result.organic_remedy} />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '.85rem', marginBottom: '1.25rem' }}>
+                <InfoBlock label="Symptoms" content={result.symptoms} />
+                <InfoBlock label="Treatment" content={result.treatment} />
+                <InfoBlock label="Organic Remedy" content={result.organic_remedy} />
+              </div>
 
-              <div style={{ marginBottom: '1rem' }}>
-                <strong style={{ fontSize: '.85rem', display: 'block', marginBottom: '.4rem' }}>🧪 Recommended Pesticides</strong>
+              <div style={{ marginBottom: '1.25rem' }}>
+                <p style={{ fontSize: '.78rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.04em', marginBottom: '.5rem' }}>Recommended Pesticides</p>
                 <div style={{ display: 'flex', gap: '.4rem', flexWrap: 'wrap' }}>
                   {result.pesticides.map(p => <span key={p} className="badge badge-red">{p}</span>)}
                 </div>
               </div>
 
-              <div style={{ display: 'flex', gap: '.75rem', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: '.6rem', flexWrap: 'wrap', paddingTop: '1rem', borderTop: '1px solid var(--border)' }}>
                 <a href={result.video_url} target="_blank" rel="noreferrer" className="btn btn-secondary btn-sm">
-                  <ExternalLink size={14} /> Watch Tutorial
+                  <Play size={13} /> Watch Tutorial
                 </a>
                 {result.buy_links?.map((link, i) => (
-                  <a key={i} href={link} target="_blank" rel="noreferrer" className="btn btn-amber btn-sm">
-                    🛒 Buy {result.pesticides[i]}
+                  <a key={i} href={link} target="_blank" rel="noreferrer" className="btn btn-sm" style={{ background: 'var(--amber-pale)', color: '#b45309', border: '1px solid #fcd34d' }}>
+                    <ShoppingCart size={13} /> Buy {result.pesticides[i]}
                   </a>
                 ))}
               </div>
@@ -143,7 +143,7 @@ export default function DiseaseDetection() {
 
           {!result && !loading && (
             <div className="empty-state card">
-              <Bug size={48} />
+              <Bug size={44} />
               <p>Upload a photo of your plant to detect diseases instantly</p>
             </div>
           )}
@@ -153,11 +153,11 @@ export default function DiseaseDetection() {
   )
 }
 
-function Section({ title, content }) {
+function InfoBlock({ label, content }) {
   return (
-    <div style={{ marginBottom: '.85rem' }}>
-      <strong style={{ fontSize: '.85rem', display: 'block', marginBottom: '.25rem' }}>{title}</strong>
-      <p style={{ fontSize: '.9rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>{content}</p>
+    <div style={{ padding: '.75rem', background: 'var(--bg)', borderRadius: 8, border: '1px solid var(--border)' }}>
+      <p style={{ fontSize: '.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.04em', marginBottom: '.3rem' }}>{label}</p>
+      <p style={{ fontSize: '.88rem', lineHeight: 1.6, color: 'var(--text)' }}>{content}</p>
     </div>
   )
 }

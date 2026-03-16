@@ -65,7 +65,7 @@ export default function ChatBot() {
           <div style={{ background: 'var(--green)', color: '#fff', padding: '.75rem 1rem', display: 'flex', alignItems: 'center', gap: '.5rem' }}>
             <span style={{ fontSize: '1.2rem' }}>🌾</span>
             <div>
-              <div style={{ fontWeight: 700, fontSize: '.95rem' }}>RythuMitra AI</div>
+              <div style={{ fontWeight: 700, fontSize: '.95rem' }}>Rythu Seva AI</div>
               <div style={{ fontSize: '.7rem', opacity: .8 }}>Agriculture Assistant</div>
             </div>
           </div>

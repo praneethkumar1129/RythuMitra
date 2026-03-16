@@ -37,7 +37,7 @@ export default function InstallPWA() {
       <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem' }}>
         <span style={{ fontSize: '1.8rem' }}>🌾</span>
         <div>
-          <div style={{ fontWeight: 700, fontSize: '.9rem' }}>Install RythuMitra</div>
+          <div style={{ fontWeight: 700, fontSize: '.9rem' }}>Install Rythu Seva</div>
           <div style={{ fontSize: '.75rem', color: '#666' }}>Add to your home screen</div>
         </div>
       </div>

@@ -1,13 +1,13 @@
 import { useState } from 'react'
-import { Leaf, TrendingUp, Droplets, Layers } from 'lucide-react'
+import { Leaf, TrendingUp, Droplets, Layers, ArrowRight } from 'lucide-react'
 import api from '../api'
 import toast from 'react-hot-toast'
 
-const SOIL_TYPES   = ['clay', 'sandy', 'loamy', 'black']
+const SOIL_TYPES    = ['clay', 'sandy', 'loamy', 'black']
 const WATER_SOURCES = ['borewell', 'canal', 'rain']
 
 export default function CropRecommendation() {
-  const [form, setForm] = useState({ soil_type: 'loamy', location: '', water_source: 'borewell', land_size: '' })
+  const [form, setForm]     = useState({ soil_type: 'loamy', location: '', water_source: 'borewell', land_size: '' })
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)
 
@@ -22,19 +22,26 @@ export default function CropRecommendation() {
       setResult(data)
     } catch {
       toast.error('Failed to get recommendations')
-    } finally {
-      setLoading(false)
-    }
+    } finally { setLoading(false) }
   }
 
   return (
-    <div>
-      <div className="page-title"><Leaf size={24} /> Crop Recommendation</div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem' }}>
+        <div style={{ background: 'var(--green-pale)', borderRadius: 10, padding: '8px', display: 'flex' }}>
+          <Leaf size={22} color="var(--green)" />
+        </div>
+        <div>
+          <h1 style={{ fontSize: '1.4rem', fontWeight: 800, letterSpacing: '-.3px' }}>Crop Recommendation</h1>
+          <p style={{ fontSize: '.83rem', color: 'var(--text-muted)', marginTop: '.1rem' }}>AI-powered suggestions based on your land</p>
+        </div>
+      </div>
 
       <div className="grid-2" style={{ alignItems: 'start' }}>
         {/* Form */}
         <form className="card" onSubmit={submit}>
-          <h3 style={{ marginBottom: '1rem', fontWeight: 700 }}>Enter Land Details</h3>
+          <div className="section-title">Land Details</div>
 
           <div className="form-group">
             <label>Soil Type</label>
@@ -63,77 +70,68 @@ export default function CropRecommendation() {
           </div>
 
           <button type="submit" className="btn btn-primary" disabled={loading} style={{ width: '100%', justifyContent: 'center' }}>
-            {loading ? 'Analyzing...' : '🌱 Get Recommendations'}
+            {loading ? 'Analyzing...' : <><Leaf size={16} /> Get Recommendations</>}
           </button>
         </form>
 
         {/* Results */}
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {loading && <div className="spinner" />}
 
           {result && (
             <>
-              {/* Crop Cards */}
-              <div style={{ marginBottom: '1rem' }}>
-                <h3 style={{ fontWeight: 700, marginBottom: '.75rem', color: 'var(--green)' }}>
-                  <TrendingUp size={18} style={{ verticalAlign: 'middle', marginRight: '.4rem' }} />
-                  Recommended Crops
-                </h3>
-                {result.recommended_crops.map((c, i) => (
-                  <div key={c.crop} className="card" style={{ marginBottom: '.75rem', borderLeft: `4px solid var(--green)` }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.4rem' }}>
-                      <span style={{ fontWeight: 700, fontSize: '1.05rem' }}>#{i + 1} {c.crop}</span>
-                      <span className="badge badge-green">Best Pick</span>
+              <div className="card">
+                <div className="section-title"><TrendingUp size={16} color="var(--green)" /> Recommended Crops</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
+                  {result.recommended_crops.map((c, i) => (
+                    <div key={c.crop} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '.75rem', background: i === 0 ? 'var(--green-pale)' : 'var(--bg)', borderRadius: 10, border: i === 0 ? '1.5px solid #86efac' : '1px solid var(--border)' }}>
+                      <div style={{ width: 36, height: 36, borderRadius: 8, background: i === 0 ? 'var(--green)' : 'var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: i === 0 ? '#fff' : 'var(--text-muted)', fontWeight: 800, fontSize: '.9rem', flexShrink: 0 }}>
+                        #{i + 1}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 700, fontSize: '.95rem' }}>{c.crop}</div>
+                        <div style={{ fontSize: '.78rem', color: 'var(--text-muted)', marginTop: '.15rem' }}>
+                          Yield: {c.yield_per_acre} &nbsp;·&nbsp; Profit: {c.profit_per_acre}
+                        </div>
+                      </div>
+                      <div style={{ fontSize: '.82rem', fontWeight: 700, color: 'var(--green)', textAlign: 'right' }}>
+                        {c.total_profit_estimate}
+                      </div>
                     </div>
-                    <div style={{ display: 'flex', gap: '1.5rem', fontSize: '.85rem', color: 'var(--text-muted)' }}>
-                      <span>📦 Yield: {c.yield_per_acre}</span>
-                      <span>💰 Profit: {c.profit_per_acre}</span>
-                    </div>
-                    <div style={{ fontSize: '.85rem', color: 'var(--green)', marginTop: '.3rem' }}>
-                      Total estimate: {c.total_profit_estimate}
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
 
-              {/* Land Division */}
               {result.land_division?.length > 0 && (
-                <div className="card" style={{ marginBottom: '1rem' }}>
-                  <h3 style={{ fontWeight: 700, marginBottom: '.75rem' }}>
-                    <Layers size={18} style={{ verticalAlign: 'middle', marginRight: '.4rem' }} />
-                    Smart Land Division
-                  </h3>
-                  <p style={{ fontSize: '.85rem', color: 'var(--text-muted)', marginBottom: '.75rem' }}>
-                    Divide your land to reduce risk and maximize profit:
-                  </p>
+                <div className="card">
+                  <div className="section-title"><Layers size={16} color="var(--blue)" /> Smart Land Division</div>
+                  <p style={{ fontSize: '.83rem', color: 'var(--text-muted)', marginBottom: '.75rem' }}>Divide your land to reduce risk and maximize profit</p>
                   {result.land_division.map(d => (
-                    <div key={d.crop} style={{ display: 'flex', justifyContent: 'space-between',
-                      padding: '.5rem .75rem', background: 'var(--green-pale)', borderRadius: 8, marginBottom: '.4rem' }}>
-                      <span style={{ fontWeight: 600 }}>{d.crop}</span>
-                      <span style={{ color: 'var(--green)', fontWeight: 700 }}>{d.acres} acres</span>
+                    <div key={d.crop} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '.5rem .75rem', background: 'var(--bg)', borderRadius: 8, marginBottom: '.4rem', border: '1px solid var(--border)' }}>
+                      <span style={{ fontWeight: 600, fontSize: '.88rem' }}>{d.crop}</span>
+                      <span style={{ color: 'var(--green)', fontWeight: 700, fontSize: '.88rem' }}>{d.acres} acres</span>
                     </div>
                   ))}
                 </div>
               )}
 
-              {/* Tips */}
               <div className="card">
-                <h3 style={{ fontWeight: 700, marginBottom: '.75rem' }}>
-                  <Droplets size={18} style={{ verticalAlign: 'middle', marginRight: '.4rem' }} />
-                  Farming Tips
-                </h3>
-                {result.tips.map((t, i) => (
-                  <div key={i} style={{ display: 'flex', gap: '.5rem', marginBottom: '.5rem', fontSize: '.9rem' }}>
-                    <span>💡</span><span>{t}</span>
-                  </div>
-                ))}
+                <div className="section-title"><Droplets size={16} color="var(--blue)" /> Farming Tips</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '.5rem' }}>
+                  {result.tips.map((t, i) => (
+                    <div key={i} style={{ display: 'flex', gap: '.6rem', padding: '.55rem .75rem', background: 'var(--bg)', borderRadius: 8, fontSize: '.85rem', alignItems: 'flex-start' }}>
+                      <ArrowRight size={14} color="var(--green)" style={{ flexShrink: 0, marginTop: 2 }} />
+                      <span>{t}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </>
           )}
 
           {!result && !loading && (
             <div className="empty-state card">
-              <Leaf size={48} />
+              <Leaf size={44} />
               <p>Fill in your land details to get AI-powered crop recommendations</p>
             </div>
           )}

@@ -3,8 +3,6 @@ uvicorn
 pymongo[srv]
 PyJWT
 cryptography
-passlib
-bcrypt
 python-multipart
 httpx
 python-dotenv

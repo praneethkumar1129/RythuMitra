@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+motor
+pymongo
+PyJWT
+cryptography
+passlib
+bcrypt
+python-multipart
+httpx
+python-dotenv
+Pillow
+slowapi

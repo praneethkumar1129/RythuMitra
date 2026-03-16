@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { User, Leaf, Bug, Briefcase, LogOut, MapPin, Droplets, Layers, Edit2, Save, X, Phone, Clock, LogIn } from 'lucide-react'
 import api from '../api'
 import toast from 'react-hot-toast'
+import { useAuth } from '../context/AuthContext'
 
 const WATER_SOURCES = ['borewell', 'canal', 'rain']
 const TABS = ['profile', 'crops', 'disease', 'jobs', 'logins']
@@ -19,11 +20,11 @@ export default function Profile() {
   const [editing, setEditing] = useState(false)
   const [editForm, setEditForm] = useState({})
   const [saving, setSaving]   = useState(false)
+  const { logout: authLogout, updateName, farmer_id } = useAuth()
   const navigate = useNavigate()
-  const farmer_id = localStorage.getItem('farmer_id')
 
   const load = () => {
-    if (!farmer_id) { navigate('/login'); return }
+    if (!farmer_id) { navigate('/auth'); return }
     api.get(`/api/farmer/${farmer_id}/history`)
       .then(r => {
         setData(r.data)
@@ -43,9 +44,9 @@ export default function Profile() {
   useEffect(() => { load() }, [])
 
   const logout = () => {
-    localStorage.clear()
-    toast.success('Logged out')
-    navigate('/login')
+    authLogout()
+    toast.success('Logged out successfully')
+    navigate('/auth')
   }
 
   const saveEdit = async () => {
@@ -56,6 +57,7 @@ export default function Profile() {
         land_size: parseFloat(editForm.land_size),
       })
       localStorage.setItem('farmer_name', res.farmer.name)
+      updateName(res.farmer.name)
       setData(d => ({ ...d, farmer: res.farmer }))
       setEditing(false)
       toast.success('Profile updated!')

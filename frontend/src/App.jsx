@@ -1,17 +1,19 @@
-import { BrowserRouter, Routes, Route, NavLink, useNavigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, NavLink, Navigate, useLocation } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
-import Dashboard from './pages/Dashboard'
-import Register from './pages/Register'
-import Login from './pages/Login'
-import Profile from './pages/Profile'
+import { useState } from 'react'
+import { AuthProvider, useAuth } from './context/AuthContext'
+
+import Dashboard        from './pages/Dashboard'
+import Auth             from './pages/Auth'
+import Profile          from './pages/Profile'
 import CropRecommendation from './pages/CropRecommendation'
 import DiseaseDetection from './pages/DiseaseDetection'
-import CropDemand from './pages/CropDemand'
-import Jobs from './pages/Jobs'
-import Weather from './pages/Weather'
-import GovSchemes from './pages/GovSchemes'
+import CropDemand       from './pages/CropDemand'
+import Jobs             from './pages/Jobs'
+import Weather          from './pages/Weather'
+import GovSchemes       from './pages/GovSchemes'
+
 import { Sprout, Home, Leaf, Bug, BarChart2, Briefcase, Cloud, BookOpen, Menu, X, User, LogIn } from 'lucide-react'
-import { useState } from 'react'
 
 const NAV = [
   { to: '/',        label: 'Home',    icon: Home },
@@ -23,66 +25,66 @@ const NAV = [
   { to: '/schemes', label: 'Schemes', icon: BookOpen },
 ]
 
-const navLinkStyle = ({ isActive }) => ({
+const linkStyle = ({ isActive }) => ({
   display: 'flex', alignItems: 'center', gap: '.3rem',
   padding: '.4rem .7rem', borderRadius: 8, textDecoration: 'none',
   color: '#fff', fontSize: '.85rem', fontWeight: 500,
-  background: isActive ? 'rgba(255,255,255,.2)' : 'transparent',
+  background: isActive ? 'rgba(255,255,255,.22)' : 'transparent',
+  transition: 'background .15s',
 })
 
 function Navbar() {
   const [open, setOpen] = useState(false)
-  const farmerName = localStorage.getItem('farmer_name')
-  const isLoggedIn = !!localStorage.getItem('token')
+  const { isLoggedIn, name } = useAuth()
 
   return (
-    <nav style={{ background: 'var(--green)', color: '#fff', position: 'sticky', top: 0, zIndex: 100 }}>
+    <nav style={{ background: 'var(--green)', color: '#fff', position: 'sticky', top: 0, zIndex: 100, boxShadow: '0 2px 8px rgba(0,0,0,.15)' }}>
       <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '.75rem 1rem' }}>
-        <NavLink to="/" style={{ display: 'flex', alignItems: 'center', gap: '.5rem', fontWeight: 700, fontSize: '1.2rem', color: '#fff', textDecoration: 'none' }}>
+
+        <NavLink to="/" style={{ display: 'flex', alignItems: 'center', gap: '.5rem', fontWeight: 800, fontSize: '1.2rem', color: '#fff', textDecoration: 'none' }}>
           <Sprout size={24} /> RythuMitra
         </NavLink>
 
-        <button className="btn" style={{ background: 'transparent', color: '#fff', display: 'none' }}
-          id="menu-btn" onClick={() => setOpen(o => !o)}>
+        <button className="btn" id="menu-btn"
+          style={{ background: 'transparent', color: '#fff', display: 'none' }}
+          onClick={() => setOpen(o => !o)}>
           {open ? <X size={22} /> : <Menu size={22} />}
         </button>
 
-        <ul style={{ display: 'flex', gap: '.25rem', listStyle: 'none', flexWrap: 'wrap', alignItems: 'center' }} id="nav-links">
+        <ul style={{ display: 'flex', gap: '.2rem', listStyle: 'none', flexWrap: 'wrap', alignItems: 'center' }} id="nav-links">
           {NAV.map(({ to, label, icon: Icon }) => (
             <li key={to}>
-              <NavLink to={to} end={to === '/'} style={navLinkStyle}>
+              <NavLink to={to} end={to === '/'} style={linkStyle}>
                 <Icon size={15} /> {label}
               </NavLink>
             </li>
           ))}
 
-          {/* Divider + logged-in name shown after Schemes */}
+          {/* Logged-in farmer name */}
           {isLoggedIn && (
-            <li style={{ display: 'flex', alignItems: 'center', gap: '.25rem',
-              borderLeft: '1px solid rgba(255,255,255,.3)', paddingLeft: '.5rem', marginLeft: '.25rem' }}>
-              <span style={{ fontSize: '.8rem', opacity: .75 }}>👋</span>
-              <span style={{ fontSize: '.85rem', fontWeight: 600, color: '#fff' }}>
-                {farmerName || 'Farmer'}
-              </span>
+            <li style={{ borderLeft: '1px solid rgba(255,255,255,.3)', paddingLeft: '.6rem', marginLeft: '.2rem',
+              display: 'flex', alignItems: 'center', gap: '.3rem' }}>
+              <span style={{ fontSize: '.8rem', opacity: .8 }}>👋</span>
+              <span style={{ fontSize: '.85rem', fontWeight: 700 }}>{name}</span>
             </li>
           )}
 
-          {/* Profile / Login button */}
+          {/* Profile / Login */}
           <li>
             {isLoggedIn ? (
               <NavLink to="/profile" style={({ isActive }) => ({
-                ...navLinkStyle({ isActive }),
-                fontWeight: 600,
+                ...linkStyle({ isActive }),
+                fontWeight: 700,
                 background: isActive ? 'rgba(255,255,255,.3)' : 'rgba(255,255,255,.15)',
               })}>
                 <User size={15} /> Profile
               </NavLink>
             ) : (
-              <NavLink to="/login" style={() => ({
+              <NavLink to="/auth" style={() => ({
                 display: 'flex', alignItems: 'center', gap: '.3rem',
-                padding: '.4rem .7rem', borderRadius: 8, textDecoration: 'none',
-                color: '#fff', fontSize: '.85rem', fontWeight: 600,
-                background: 'rgba(255,255,255,.15)',
+                padding: '.4rem .8rem', borderRadius: 8, textDecoration: 'none',
+                color: 'var(--green)', fontSize: '.85rem', fontWeight: 700,
+                background: '#fff', transition: 'opacity .15s',
               })}>
                 <LogIn size={15} /> Login
               </NavLink>
@@ -92,33 +94,60 @@ function Navbar() {
       </div>
       <style>{`
         @media(max-width:768px){
-          #menu-btn{display:flex!important}
-          #nav-links{display:${open ? 'flex' : 'none'}!important;flex-direction:column;padding:.5rem 1rem 1rem}
+          #menu-btn { display:flex !important }
+          #nav-links { display:${open ? 'flex' : 'none'} !important; flex-direction:column; padding:.5rem 1rem 1rem; width:100% }
         }
       `}</style>
     </nav>
   )
 }
 
-export default function App() {
+// Redirect to /auth if not logged in, remembers where user was going
+function Protected({ children }) {
+  const { isLoggedIn } = useAuth()
+  const location = useLocation()
+  if (!isLoggedIn) return <Navigate to="/auth" state={{ from: location.pathname }} replace />
+  return children
+}
+
+// Redirect to / if already logged in
+function GuestOnly({ children }) {
+  const { isLoggedIn } = useAuth()
+  if (isLoggedIn) return <Navigate to="/" replace />
+  return children
+}
+
+function AppRoutes() {
   return (
-    <BrowserRouter>
-      <Toaster position="top-right" />
+    <>
       <Navbar />
       <main className="container" style={{ padding: '1.5rem 1rem' }}>
         <Routes>
-          <Route path="/"         element={<Dashboard />} />
-          <Route path="/login"    element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/profile"  element={<Profile />} />
-          <Route path="/crops"    element={<CropRecommendation />} />
-          <Route path="/disease"  element={<DiseaseDetection />} />
-          <Route path="/demand"   element={<CropDemand />} />
-          <Route path="/jobs"     element={<Jobs />} />
-          <Route path="/weather"  element={<Weather />} />
-          <Route path="/schemes"  element={<GovSchemes />} />
+          <Route path="/"        element={<Dashboard />} />
+          <Route path="/auth"    element={<GuestOnly><Auth /></GuestOnly>} />
+          <Route path="/login"   element={<Navigate to="/auth" replace />} />
+          <Route path="/register" element={<Navigate to="/auth?tab=register" replace />} />
+          <Route path="/profile" element={<Protected><Profile /></Protected>} />
+          <Route path="/crops"   element={<CropRecommendation />} />
+          <Route path="/disease" element={<DiseaseDetection />} />
+          <Route path="/demand"  element={<CropDemand />} />
+          <Route path="/jobs"    element={<Jobs />} />
+          <Route path="/weather" element={<Weather />} />
+          <Route path="/schemes" element={<GovSchemes />} />
+          <Route path="*"        element={<Navigate to="/" replace />} />
         </Routes>
       </main>
+    </>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
+        <AppRoutes />
+      </AuthProvider>
     </BrowserRouter>
   )
 }

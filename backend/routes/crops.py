@@ -1,6 +1,11 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Header
+from typing import Optional
+from datetime import datetime, timezone
+import uuid
 from models.schemas import CropRecommendationRequest
 from ai.crop_recommendation import recommend_best_crops
+from database.connection import get_db
+from services.auth import decode_token
 
 router = APIRouter(prefix="/api", tags=["Crops"])
 
@@ -20,8 +25,33 @@ CROP_DEMAND_DATA = [
 ]
 
 @router.post("/crop_recommendation")
-def crop_recommendation(req: CropRecommendationRequest):
-    return recommend_best_crops(req.soil_type, req.location, req.water_source, req.land_size)
+def crop_recommendation(req: CropRecommendationRequest, authorization: Optional[str] = Header(default=None)):
+    result = recommend_best_crops(req.soil_type, req.location, req.water_source, req.land_size)
+
+    # Save to history if logged in
+    farmer_id = None
+    if authorization and authorization.startswith("Bearer "):
+        payload = decode_token(authorization.split(" ")[1])
+        if payload:
+            farmer_id = payload.get("farmer_id")
+
+    if farmer_id:
+        try:
+            db = get_db()
+            db.crop_history.insert_one({
+                "history_id": str(uuid.uuid4()),
+                "farmer_id": farmer_id,
+                "soil_type": req.soil_type,
+                "location": req.location,
+                "water_source": req.water_source,
+                "land_size": req.land_size,
+                "recommended_crops": [c["crop"] for c in result["recommended_crops"]],
+                "searched_at": datetime.now(timezone.utc),
+            })
+        except Exception:
+            pass
+
+    return result
 
 @router.get("/crop_demand")
 def crop_demand():

@@ -1,40 +1,46 @@
-import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, NavLink, useNavigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import Dashboard from './pages/Dashboard'
 import Register from './pages/Register'
+import Login from './pages/Login'
+import Profile from './pages/Profile'
 import CropRecommendation from './pages/CropRecommendation'
 import DiseaseDetection from './pages/DiseaseDetection'
 import CropDemand from './pages/CropDemand'
 import Jobs from './pages/Jobs'
 import Weather from './pages/Weather'
 import GovSchemes from './pages/GovSchemes'
-import { Sprout, Home, UserPlus, Leaf, Bug, BarChart2, Briefcase, Cloud, BookOpen, Menu, X } from 'lucide-react'
+import { Sprout, Home, Leaf, Bug, BarChart2, Briefcase, Cloud, BookOpen, Menu, X, User, LogIn } from 'lucide-react'
 import { useState } from 'react'
 
 const NAV = [
-  { to: '/',           label: 'Home',       icon: Home },
-  { to: '/register',   label: 'Register',   icon: UserPlus },
-  { to: '/crops',      label: 'Crops',      icon: Leaf },
-  { to: '/disease',    label: 'Disease',    icon: Bug },
-  { to: '/demand',     label: 'Market',     icon: BarChart2 },
-  { to: '/jobs',       label: 'Jobs',       icon: Briefcase },
-  { to: '/weather',    label: 'Weather',    icon: Cloud },
-  { to: '/schemes',    label: 'Schemes',    icon: BookOpen },
+  { to: '/',        label: 'Home',    icon: Home },
+  { to: '/crops',   label: 'Crops',   icon: Leaf },
+  { to: '/disease', label: 'Disease', icon: Bug },
+  { to: '/demand',  label: 'Market',  icon: BarChart2 },
+  { to: '/jobs',    label: 'Jobs',    icon: Briefcase },
+  { to: '/weather', label: 'Weather', icon: Cloud },
+  { to: '/schemes', label: 'Schemes', icon: BookOpen },
 ]
 
 function Navbar() {
   const [open, setOpen] = useState(false)
+  const farmerName = localStorage.getItem('farmer_name')
+  const isLoggedIn = !!localStorage.getItem('token')
+
   return (
     <nav style={{ background: 'var(--green)', color: '#fff', position: 'sticky', top: 0, zIndex: 100 }}>
       <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '.75rem 1rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '.5rem', fontWeight: 700, fontSize: '1.2rem' }}>
+        <NavLink to="/" style={{ display: 'flex', alignItems: 'center', gap: '.5rem', fontWeight: 700, fontSize: '1.2rem', color: '#fff', textDecoration: 'none' }}>
           <Sprout size={24} /> RythuMitra
-        </div>
+        </NavLink>
+
         <button className="btn" style={{ background: 'transparent', color: '#fff', display: 'none' }}
           id="menu-btn" onClick={() => setOpen(o => !o)}>
           {open ? <X size={22} /> : <Menu size={22} />}
         </button>
-        <ul style={{ display: 'flex', gap: '.25rem', listStyle: 'none', flexWrap: 'wrap' }} id="nav-links">
+
+        <ul style={{ display: 'flex', gap: '.25rem', listStyle: 'none', flexWrap: 'wrap', alignItems: 'center' }} id="nav-links">
           {NAV.map(({ to, label, icon: Icon }) => (
             <li key={to}>
               <NavLink to={to} end={to === '/'}
@@ -48,6 +54,31 @@ function Navbar() {
               </NavLink>
             </li>
           ))}
+
+          {/* Auth buttons */}
+          <li>
+            {isLoggedIn ? (
+              <NavLink to="/profile"
+                style={({ isActive }) => ({
+                  display: 'flex', alignItems: 'center', gap: '.3rem',
+                  padding: '.4rem .7rem', borderRadius: 8, textDecoration: 'none',
+                  color: '#fff', fontSize: '.85rem', fontWeight: 600,
+                  background: isActive ? 'rgba(255,255,255,.3)' : 'rgba(255,255,255,.15)',
+                })}>
+                <User size={15} /> {farmerName?.split(' ')[0] || 'Profile'}
+              </NavLink>
+            ) : (
+              <NavLink to="/login"
+                style={({ isActive }) => ({
+                  display: 'flex', alignItems: 'center', gap: '.3rem',
+                  padding: '.4rem .7rem', borderRadius: 8, textDecoration: 'none',
+                  color: '#fff', fontSize: '.85rem', fontWeight: 600,
+                  background: 'rgba(255,255,255,.15)',
+                })}>
+                <LogIn size={15} /> Login
+              </NavLink>
+            )}
+          </li>
         </ul>
       </div>
       <style>{`
@@ -68,7 +99,9 @@ export default function App() {
       <main className="container" style={{ padding: '1.5rem 1rem' }}>
         <Routes>
           <Route path="/"         element={<Dashboard />} />
+          <Route path="/login"    element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/profile"  element={<Profile />} />
           <Route path="/crops"    element={<CropRecommendation />} />
           <Route path="/disease"  element={<DiseaseDetection />} />
           <Route path="/demand"   element={<CropDemand />} />

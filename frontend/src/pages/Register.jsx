@@ -8,7 +8,7 @@ const WATER_SOURCES = ['borewell', 'canal', 'rain']
 const COMMON_CROPS = ['Rice', 'Wheat', 'Cotton', 'Tomato', 'Chilli', 'Maize', 'Groundnut', 'Soybean', 'Onion', 'Sugarcane']
 
 export default function Register() {
-  const [form, setForm] = useState({ name: '', location: '', land_size: '', water_source: 'borewell', crops: [], phone: '' })
+  const [form, setForm] = useState({ name: '', location: '', land_size: '', water_source: 'borewell', crops: [], phone: '', password: '' })
   const [cropInput, setCropInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [registered, setRegistered] = useState(null)
@@ -38,6 +38,7 @@ export default function Register() {
       const { data } = await api.post('/api/register_farmer', { ...form, land_size: parseFloat(form.land_size) })
       localStorage.setItem('token', data.token)
       localStorage.setItem('farmer_id', data.farmer_id)
+      localStorage.setItem('farmer_name', data.name)
       setRegistered(data)
       toast.success('Registration successful!')
     } catch (err) {
@@ -103,6 +104,12 @@ export default function Register() {
           <select value={form.water_source} onChange={e => set('water_source', e.target.value)}>
             {WATER_SOURCES.map(w => <option key={w} value={w}>{w.charAt(0).toUpperCase() + w.slice(1)}</option>)}
           </select>
+        </div>
+
+        <div className="form-group">
+          <label>Password (for login)</label>
+          <input type="password" value={form.password} onChange={e => set('password', e.target.value)}
+            placeholder="Set a password to login later" />
         </div>
 
         <div className="form-group">

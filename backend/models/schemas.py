@@ -6,9 +6,10 @@ class FarmerCreate(BaseModel):
     name: str
     location: str
     land_size: float
-    water_source: str  # borewell | canal | rain
+    water_source: str
     crops: List[str]
     phone: Optional[str] = None
+    password: Optional[str] = None
 
 class FarmerResponse(BaseModel):
     farmer_id: str

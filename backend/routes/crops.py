@@ -20,10 +20,9 @@ CROP_DEMAND_DATA = [
 ]
 
 @router.post("/crop_recommendation")
-async def crop_recommendation(req: CropRecommendationRequest):
-    result = recommend_best_crops(req.soil_type, req.location, req.water_source, req.land_size)
-    return result
+def crop_recommendation(req: CropRecommendationRequest):
+    return recommend_best_crops(req.soil_type, req.location, req.water_source, req.land_size)
 
 @router.get("/crop_demand")
-async def crop_demand():
+def crop_demand():
     return {"data": CROP_DEMAND_DATA}

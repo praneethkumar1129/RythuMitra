@@ -1,4 +1,4 @@
-from motor.motor_asyncio import AsyncIOMotorClient
+from pymongo import MongoClient
 from dotenv import load_dotenv
 import os
 
@@ -6,19 +6,13 @@ load_dotenv()
 
 MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017/rythumitra")
 
-client: AsyncIOMotorClient = None
-db = None
+_client = None
 
-async def connect_db():
-    global client, db
-    client = AsyncIOMotorClient(MONGODB_URI)
-    db = client.rythumitra
-    print("Connected to MongoDB")
-
-async def close_db():
-    global client
-    if client:
-        client.close()
+def get_client():
+    global _client
+    if _client is None:
+        _client = MongoClient(MONGODB_URI)
+    return _client
 
 def get_db():
-    return db
+    return get_client().rythumitra

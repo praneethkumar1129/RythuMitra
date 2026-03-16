@@ -23,6 +23,13 @@ const NAV = [
   { to: '/schemes', label: 'Schemes', icon: BookOpen },
 ]
 
+const navLinkStyle = ({ isActive }) => ({
+  display: 'flex', alignItems: 'center', gap: '.3rem',
+  padding: '.4rem .7rem', borderRadius: 8, textDecoration: 'none',
+  color: '#fff', fontSize: '.85rem', fontWeight: 500,
+  background: isActive ? 'rgba(255,255,255,.2)' : 'transparent',
+})
+
 function Navbar() {
   const [open, setOpen] = useState(false)
   const farmerName = localStorage.getItem('farmer_name')
@@ -43,38 +50,40 @@ function Navbar() {
         <ul style={{ display: 'flex', gap: '.25rem', listStyle: 'none', flexWrap: 'wrap', alignItems: 'center' }} id="nav-links">
           {NAV.map(({ to, label, icon: Icon }) => (
             <li key={to}>
-              <NavLink to={to} end={to === '/'}
-                style={({ isActive }) => ({
-                  display: 'flex', alignItems: 'center', gap: '.3rem',
-                  padding: '.4rem .7rem', borderRadius: 8, textDecoration: 'none',
-                  color: '#fff', fontSize: '.85rem', fontWeight: 500,
-                  background: isActive ? 'rgba(255,255,255,.2)' : 'transparent',
-                })}>
+              <NavLink to={to} end={to === '/'} style={navLinkStyle}>
                 <Icon size={15} /> {label}
               </NavLink>
             </li>
           ))}
 
-          {/* Auth buttons */}
+          {/* Divider + logged-in name shown after Schemes */}
+          {isLoggedIn && (
+            <li style={{ display: 'flex', alignItems: 'center', gap: '.25rem',
+              borderLeft: '1px solid rgba(255,255,255,.3)', paddingLeft: '.5rem', marginLeft: '.25rem' }}>
+              <span style={{ fontSize: '.8rem', opacity: .75 }}>👋</span>
+              <span style={{ fontSize: '.85rem', fontWeight: 600, color: '#fff' }}>
+                {farmerName || 'Farmer'}
+              </span>
+            </li>
+          )}
+
+          {/* Profile / Login button */}
           <li>
             {isLoggedIn ? (
-              <NavLink to="/profile"
-                style={({ isActive }) => ({
-                  display: 'flex', alignItems: 'center', gap: '.3rem',
-                  padding: '.4rem .7rem', borderRadius: 8, textDecoration: 'none',
-                  color: '#fff', fontSize: '.85rem', fontWeight: 600,
-                  background: isActive ? 'rgba(255,255,255,.3)' : 'rgba(255,255,255,.15)',
-                })}>
-                <User size={15} /> {farmerName?.split(' ')[0] || 'Profile'}
+              <NavLink to="/profile" style={({ isActive }) => ({
+                ...navLinkStyle({ isActive }),
+                fontWeight: 600,
+                background: isActive ? 'rgba(255,255,255,.3)' : 'rgba(255,255,255,.15)',
+              })}>
+                <User size={15} /> Profile
               </NavLink>
             ) : (
-              <NavLink to="/login"
-                style={({ isActive }) => ({
-                  display: 'flex', alignItems: 'center', gap: '.3rem',
-                  padding: '.4rem .7rem', borderRadius: 8, textDecoration: 'none',
-                  color: '#fff', fontSize: '.85rem', fontWeight: 600,
-                  background: 'rgba(255,255,255,.15)',
-                })}>
+              <NavLink to="/login" style={() => ({
+                display: 'flex', alignItems: 'center', gap: '.3rem',
+                padding: '.4rem .7rem', borderRadius: 8, textDecoration: 'none',
+                color: '#fff', fontSize: '.85rem', fontWeight: 600,
+                background: 'rgba(255,255,255,.15)',
+              })}>
                 <LogIn size={15} /> Login
               </NavLink>
             )}

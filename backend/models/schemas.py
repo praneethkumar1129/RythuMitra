@@ -11,6 +11,14 @@ class FarmerCreate(BaseModel):
     phone: Optional[str] = None
     password: Optional[str] = None
 
+class FarmerUpdate(BaseModel):
+    name: Optional[str] = None
+    location: Optional[str] = None
+    land_size: Optional[float] = None
+    water_source: Optional[str] = None
+    crops: Optional[List[str]] = None
+    phone: Optional[str] = None
+
 class FarmerResponse(BaseModel):
     farmer_id: str
     name: str

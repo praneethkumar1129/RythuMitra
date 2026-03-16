@@ -8,11 +8,34 @@ export default function ChatBot() {
   ])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
+  const [listening, setListening] = useState(false)
   const bottomRef = useRef(null)
+  const recognitionRef = useRef(null)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, open])
+
+  function toggleMic() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+    if (!SpeechRecognition) return alert('Speech recognition not supported in this browser.')
+
+    if (listening) {
+      recognitionRef.current?.stop()
+      setListening(false)
+      return
+    }
+
+    const rec = new SpeechRecognition()
+    rec.lang = 'te-IN'
+    rec.interimResults = false
+    rec.onresult = e => setInput(e.results[0][0].transcript)
+    rec.onend = () => setListening(false)
+    rec.onerror = () => setListening(false)
+    recognitionRef.current = rec
+    rec.start()
+    setListening(true)
+  }
 
   async function send() {
     const text = input.trim()
@@ -85,6 +108,14 @@ export default function ChatBot() {
                 fontSize: '.82rem', outline: 'none'
               }}
             />
+            <button onClick={toggleMic}
+              title={listening ? 'Stop' : 'Speak'}
+              style={{
+                background: listening ? '#ef4444' : '#f3f4f6', color: listening ? '#fff' : '#555',
+                border: 'none', borderRadius: 8, padding: '.45rem .6rem', cursor: 'pointer', fontSize: '1rem'
+              }}>
+              {listening ? '⏹' : '🎤'}
+            </button>
             <button onClick={send} disabled={loading}
               style={{
                 background: 'var(--green)', color: '#fff', border: 'none', borderRadius: 8,

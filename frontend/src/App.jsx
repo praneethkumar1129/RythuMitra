@@ -15,6 +15,7 @@ import GovSchemes       from './pages/GovSchemes'
 
 import { Sprout, Home, Leaf, Bug, BarChart2, Briefcase, Cloud, BookOpen, Menu, X, User, LogIn } from 'lucide-react'
 import ChatBot from './components/ChatBot'
+import InstallPWA from './components/InstallPWA'
 
 const NAV = [
   { to: '/',        label: 'Home',    icon: Home },
@@ -139,6 +140,7 @@ function AppRoutes() {
         </Routes>
       </main>
       <ChatBot />
+      <InstallPWA />
     </>
   )
 }

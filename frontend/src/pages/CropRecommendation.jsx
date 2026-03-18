@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useLang } from '../context/LangContext'
 import { Leaf, TrendingUp, Droplets, Layers, ArrowRight } from 'lucide-react'
 import api from '../api'
 import toast from 'react-hot-toast'
@@ -7,6 +8,7 @@ const SOIL_TYPES    = ['clay', 'sandy', 'loamy', 'black']
 const WATER_SOURCES = ['borewell', 'canal', 'rain']
 
 export default function CropRecommendation() {
+  const { t } = useLang()
   const [form, setForm]     = useState({ soil_type: 'loamy', location: '', water_source: 'borewell', land_size: '' })
   const [result, setResult] = useState(null)
   const [loading, setLoading] = useState(false)

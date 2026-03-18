@@ -28,14 +28,15 @@ function webSpeechFallback(text, lang) {
   window.speechSynthesis.speak(utt)
 }
 
-export default function VoiceAssistant({ onTranscript, lang = 'te-IN', welcomeText, welcomeLang = 'te' }) {
+export default function VoiceAssistant({ onTranscript, lang = 'te', welcomeText, welcomeLang = 'te' }) {
   const [listening, setListening] = useState(false)
   const [transcript, setTranscript] = useState('')
 
   const startListening = useCallback(() => {
     if (!SpeechRecognition) return alert('Speech recognition not supported. Please use Chrome browser.')
     const rec = new SpeechRecognition()
-    rec.lang = lang
+    const langCode = lang === 'en' ? 'en-IN' : `${lang}-IN`
+    rec.lang = langCode
     rec.interimResults = false
     rec.maxAlternatives = 1
     rec.onstart = () => setListening(true)
@@ -53,12 +54,12 @@ export default function VoiceAssistant({ onTranscript, lang = 'te-IN', welcomeTe
     <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem', flexWrap: 'wrap' }}>
       <button className={`btn ${listening ? 'btn-danger' : 'btn-primary'}`}
         onClick={listening ? undefined : startListening}>
-        {listening ? <MicOff size={18} /> : <Mic size={18} />}
         {listening ? 'వింటున్నాను...' : 'మాట్లాడండి (Speak)'}
+        {listening ? <MicOff size={18} /> : <Mic size={18} />}
       </button>
       {welcomeText && (
         <button className="btn btn-secondary" onClick={() => speak(welcomeText, welcomeLang)}>
-          <Volume2 size={18} /> తెలుగులో వినండి
+          <Volume2 size={18} /> {welcomeLang === 'te' ? 'తెలుగులో వినండి' : 'Listen in English'}
         </button>
       )}
       {transcript && (

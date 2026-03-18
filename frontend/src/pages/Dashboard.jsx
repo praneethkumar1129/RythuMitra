@@ -1,10 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { useLang } from '../context/LangContext'
 import { Sprout, Leaf, Bug, Briefcase, BookOpen, Cloud, BarChart2, Volume2, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { speak } from '../components/VoiceAssistant'
-
-const WELCOME_TE = 'రైతు సేవకు స్వాగతం. పంట సూచనలు, మొక్కల వ్యాధి గుర్తింపు, వ్యవసాయ ఉద్యోగాలు మరియు ప్రభుత్వ పథకాలలో నేను మీకు సహాయం చేస్తాను.'
-const WELCOME_EN = 'Welcome to Rythu Seva. I will help you with crop suggestions, plant disease detection, farming jobs and government schemes.'
 
 const FEATURES = [
   { to: '/crops',   icon: Leaf,      label: 'Crop Recommendation', desc: 'AI-powered crop suggestions based on your soil & water',  color: '#2d7a3a', bg: '#e8f5e9' },
@@ -22,12 +20,7 @@ const STATS = [
 ]
 
 export default function Dashboard() {
-  const [lang, setLang] = useState('te')
-
-  useEffect(() => {
-    const t = setTimeout(() => speak(WELCOME_TE, 'te-IN'), 800)
-    return () => clearTimeout(t)
-  }, [])
+  const { lang, t } = useLang()
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
@@ -52,18 +45,15 @@ export default function Dashboard() {
         </div>
 
         <p style={{ fontSize: '1rem', lineHeight: 1.7, marginBottom: '1.5rem', opacity: .88, maxWidth: 560 }}>
-          {lang === 'te' ? WELCOME_TE : WELCOME_EN}
+          {t('common', 'welcome')}
         </p>
 
         <div style={{ display: 'flex', gap: '.75rem', flexWrap: 'wrap' }}>
           <button className="btn" style={{ background: 'rgba(255,255,255,.15)', color: '#fff', border: '1px solid rgba(255,255,255,.25)' }}
-            onClick={() => speak(lang === 'te' ? WELCOME_TE : WELCOME_EN, lang === 'te' ? 'te-IN' : 'en-IN')}>
-            <Volume2 size={16} /> Listen
+            onClick={() => speak(t('common', 'welcome'), lang)}>
+            <Volume2 size={16} /> {t('common', 'speak')}
           </button>
-          <button className="btn" style={{ background: 'rgba(255,255,255,.12)', color: '#fff', border: '1px solid rgba(255,255,255,.2)' }}
-            onClick={() => setLang(l => l === 'te' ? 'en' : 'te')}>
-            {lang === 'te' ? 'Switch to English' : 'తెలుగులో చూడండి'}
-          </button>
+          {/* Global toggle in navbar, remove local */}
           <Link to="/auth?tab=register" className="btn" style={{ background: '#fff', color: 'var(--green)', fontWeight: 700 }}>
             Get Started <ArrowRight size={15} />
           </Link>
@@ -83,7 +73,7 @@ export default function Dashboard() {
       {/* Features */}
       <div>
         <div className="section-title" style={{ marginBottom: '1.1rem' }}>
-          <Sprout size={18} color="var(--green)" /> Our Services
+          <Sprout size={18} color="var(--green)" /> {t('common', 'ourServices')}
         </div>
         <div className="grid-2">
           {FEATURES.map(({ to, icon: Icon, label, desc, color, bg }) => (

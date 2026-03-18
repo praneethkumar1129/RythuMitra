@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect } from 'react'
+import { useLang } from '../context/LangContext'
 import api from '../api'
 
-export default function ChatBot() {
+export default function ChatBot({ lang = 'te' }) {
+  const { t } = useLang()
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState([
-    { role: 'model', text: 'నమస్కారం! 👋 I am RythuMitra AI. Ask me anything about farming!' }
+    { role: 'model', text: t('common', 'welcome') || 'నమస్కారం! 👋 I am RythuMitra AI. Ask me anything about farming!' }
   ])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -27,7 +29,8 @@ export default function ChatBot() {
     }
 
     const rec = new SpeechRecognition()
-    rec.lang = 'te-IN'
+    const langCode = lang === 'en' ? 'en-IN' : `${lang}-IN`
+    rec.lang = langCode
     rec.interimResults = false
     rec.onresult = e => setInput(e.results[0][0].transcript)
     rec.onend = () => setListening(false)
@@ -66,16 +69,16 @@ export default function ChatBot() {
             <span style={{ fontSize: '1.2rem' }}>🌾</span>
             <div>
               <div style={{ fontWeight: 700, fontSize: '.95rem' }}>Rythu Seva AI</div>
-              <div style={{ fontSize: '.7rem', opacity: .8 }}>Agriculture Assistant</div>
+              <div style={{ fontSize: '.7rem', opacity: .8 }}>{t('common', 'agriAssistant') || 'Agriculture Assistant'}</div>
             </div>
           </div>
 
           {/* Messages */}
           <div style={{ flex: 1, overflowY: 'auto', padding: '.75rem', display: 'flex', flexDirection: 'column', gap: '.5rem' }}>
-            {messages.map((m, i) => (
-              <div key={i} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start' }}>
+{messages.map((m, i) => (
+              <div key={i} style={{ display: 'flex', justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start', gap: '.4rem', alignItems: 'flex-start' }}>
                 <div style={{
-                  maxWidth: '80%', padding: '.5rem .75rem', borderRadius: 12, fontSize: '.82rem', lineHeight: 1.5,
+                  maxWidth: '75%', padding: '.5rem .75rem', borderRadius: 12, fontSize: '.82rem', lineHeight: 1.5,
                   background: m.role === 'user' ? 'var(--green)' : '#f3f4f6',
                   color: m.role === 'user' ? '#fff' : '#111',
                   borderBottomRightRadius: m.role === 'user' ? 2 : 12,
@@ -84,12 +87,17 @@ export default function ChatBot() {
                 }}>
                   {m.text}
                 </div>
+                {m.role === 'model' && (
+                  <button onClick={() => speak(m.text, lang)} title="Speak" style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, fontSize: '1.1rem' }}>
+                    🔊
+                  </button>
+                )}
               </div>
             ))}
             {loading && (
               <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
                 <div style={{ background: '#f3f4f6', padding: '.5rem .75rem', borderRadius: 12, fontSize: '.82rem', color: '#666' }}>
-                  Thinking...
+                  {t('common', 'thinking') || 'Thinking...'}
                 </div>
               </div>
             )}
@@ -102,7 +110,7 @@ export default function ChatBot() {
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && send()}
-              placeholder="Ask about crops, schemes..."
+              placeholder={t('common', 'askFarming') || "Ask about crops, schemes..."}
               style={{
                 flex: 1, padding: '.45rem .7rem', borderRadius: 8, border: '1px solid #d1d5db',
                 fontSize: '.82rem', outline: 'none'

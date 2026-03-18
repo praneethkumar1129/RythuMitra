@@ -28,6 +28,7 @@ class Message(BaseModel):
 
 class ChatRequest(BaseModel):
     messages: List[Message]
+    lang: str = 'te'
 
 def _mock_response(user_msg: str) -> str:
     msg = user_msg.lower()
@@ -51,8 +52,15 @@ def _mock_response(user_msg: str) -> str:
 def chat(req: ChatRequest):
     user_msg = req.messages[-1].text if req.messages else ""
 
+    # Bilingual response using voice_assistant
+    from ..ai.voice_assistant import generate_voice_response
+    voice_resp = generate_voice_response('welcome', req.lang)  # Use lang, default 'welcome' key for AI chat
+    reply = voice_resp['text']
+
     if not GEMINI_API_KEY:
-        return {"reply": _mock_response(user_msg)}
+        reply = _mock_response(user_msg)
+
+    return {"reply": reply, "lang": req.lang, "lang_code": voice_resp['lang_code']}
 
     try:
         # Build Gemini conversation history

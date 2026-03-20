@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useLang } from '../context/LangContext'
 import api from '../api'
+import { speak } from './VoiceAssistant'
 
 export default function ChatBot({ lang = 'te' }) {
   const { t } = useLang()

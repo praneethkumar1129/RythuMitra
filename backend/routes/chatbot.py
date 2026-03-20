@@ -9,7 +9,7 @@ router = APIRouter(prefix="/api", tags=["Chatbot"])
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
 
-SYSTEM_PROMPT = """You are RythuMitra AI, a helpful agriculture assistant for Indian farmers, especially in Andhra Pradesh and Telangana.
+SYSTEM_PROMPT = """You are Rythu Seva AI, a helpful agriculture assistant for Indian farmers, especially in Andhra Pradesh and Telangana.
 You help farmers with:
 - Crop recommendations based on soil, water, season
 - Plant disease identification and treatment
@@ -23,12 +23,11 @@ Keep answers short, practical and farmer-friendly. Use bullet points when listin
 Do not answer questions unrelated to farming or agriculture."""
 
 class Message(BaseModel):
-    role: str   # "user" or "model"
+    role: str
     text: str
 
 class ChatRequest(BaseModel):
     messages: List[Message]
-    lang: str = 'te'
 
 def _mock_response(user_msg: str) -> str:
     msg = user_msg.lower()
@@ -44,29 +43,26 @@ def _mock_response(user_msg: str) -> str:
         return "📊 Current high-demand crops:\n• Vegetables: ₹2,800/quintal (demand 92)\n• Onion: ₹2,500/quintal (demand 88)\n• Tomato: ₹1,800/quintal (demand 90)\nCheck Market page for full demand graph."
     if any(w in msg for w in ["soil", "నేల", "మట్టి"]):
         return "🌱 Soil tips:\n• Black soil → Cotton, Soybean, Wheat\n• Loamy soil → Tomato, Chilli, Maize\n• Sandy soil → Groundnut, Watermelon\n• Clay soil → Rice, Sugarcane\nGet soil tested free via Soil Health Card scheme!"
-    if any(w in msg for w in ["hello", "hi", "నమస్కారం", "హలో"]):
-        return "నమస్కారం! 👋 Welcome to RythuMitra AI. I can help you with:\n• Crop recommendations\n• Disease detection\n• Government schemes\n• Weather alerts\n• Market prices\n\nWhat would you like to know?"
+    if any(w in msg for w in ["cotton", "పత్తి"]):
+        return "🌿 Cotton grows best in black soil with borewell irrigation. Sow in May-June. Common pest: Bollworm — spray Chlorpyrifos 2ml/L. Avoid waterlogging. Expected yield: 8-12 quintals/acre."
+    if any(w in msg for w in ["fertilizer", "urea", "ఎరువు"]):
+        return "🧪 Fertilizer guide:\n• Urea (Nitrogen): Apply at sowing + tillering\n• DAP (Phosphorus): Apply at sowing\n• Potash (MOP): Apply at flowering\n• Organic: Vermicompost 2 tons/acre improves soil health"
+    if any(w in msg for w in ["hello", "hi", "నమస్కారం", "హలో", "help"]):
+        return "నమస్కారం! 👋 Welcome to Rythu Seva AI. I can help you with:\n• Crop recommendations\n• Disease detection\n• Government schemes\n• Weather alerts\n• Market prices\n\nWhat would you like to know?"
     return "I'm here to help with farming questions! Ask me about crops, diseases, schemes, weather, or market prices. You can also type in Telugu — నేను తెలుగులో కూడా సహాయం చేస్తాను! 🌾"
 
 @router.post("/chat")
 def chat(req: ChatRequest):
     user_msg = req.messages[-1].text if req.messages else ""
 
-    # Bilingual response using voice_assistant
-    from ..ai.voice_assistant import generate_voice_response
-    voice_resp = generate_voice_response('welcome', req.lang)  # Use lang, default 'welcome' key for AI chat
-    reply = voice_resp['text']
-
     if not GEMINI_API_KEY:
-        reply = _mock_response(user_msg)
-
-    return {"reply": reply, "lang": req.lang, "lang_code": voice_resp['lang_code']}
+        return {"reply": _mock_response(user_msg)}
 
     try:
-        # Build Gemini conversation history
-        contents = [{"role": "user", "parts": [{"text": SYSTEM_PROMPT + "\n\nNow answer the farmer's question:"}]},
-                    {"role": "model", "parts": [{"text": "Understood! I am RythuMitra AI, ready to help farmers. Please ask your question."}]}]
-
+        contents = [
+            {"role": "user", "parts": [{"text": SYSTEM_PROMPT + "\n\nNow answer the farmer's question:"}]},
+            {"role": "model", "parts": [{"text": "Understood! I am Rythu Seva AI, ready to help farmers. Please ask your question."}]}
+        ]
         for m in req.messages:
             contents.append({"role": m.role, "parts": [{"text": m.text}]})
 

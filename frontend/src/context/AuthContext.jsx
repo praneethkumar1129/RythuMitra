@@ -17,7 +17,9 @@ export function AuthProvider({ children }) {
   }, [])
 
   const logout = useCallback(() => {
-    localStorage.clear()
+    localStorage.removeItem('token')
+    localStorage.removeItem('farmer_id')
+    localStorage.removeItem('farmer_name')
     setAuth({ token: null, farmer_id: null, name: null })
   }, [])
 

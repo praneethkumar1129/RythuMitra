@@ -1,0 +1,143 @@
+{
+  "app": {
+    "title": "రైతు సేవ",
+    "tagline": "మీ AI వ్యవసాయ సహాయకుడు"
+  },
+  "navbar": {
+    "home": "హోమ్",
+    "crops": "పంటలు",
+    "disease": "వ్యాధి",
+    "market": "మార్కెట్",
+    "jobs": "ఉద్యోగాలు",
+    "weather": "వాతావరణం",
+    "schemes": "పథకాలు",
+    "profile": "ప్రొఫైల్",
+    "login": "లాగిన్"
+  },
+  "common": {
+    "welcome": "రైతు సేవకు స్వాగతం. పంట సూచనలు, మొక్కల వ్యాధి గుర్తింపు, వ్యవసాయ ఉద్యోగాలు మరియు ప్రభుత్వ పథకాలలో నేను మీకు సహాయం చేస్తాను.",
+    "speak": "వినండి",
+    "toggle_lang_en": "తెలుగు",
+    "toggle_lang_te": "ఇంగ్లీష్",
+    "loading": "లోడింగ్...",
+    "analyzing": "విశ్లేషిస్తున్నారు...",
+    "error": "ఏదో తప్పు జరిగింది",
+    "ask_farming": "పంటలు, పథకాల గురించి అడగండి...",
+    "ourServices": "మా సేవలు"
+  },
+  "dashboard": {
+    "stats": {
+      "farmers_registered": "నమోదైన రైతులు",
+      "diseases_detected": "గుర్తించిన వ్యాధులు",
+      "jobs_posted": "పోస్ట్ చేసిన ఉద్యోగాలు"
+    },
+    "features": {
+      "crop_rec": "పంట సిఫార్సు",
+      "disease_detection": "వ్యాధి గుర్తింపు",
+      "market_demand": "మార్కెట్ డిమాండ్",
+      "farm_jobs": "పొలం ఉద్యోగాలు",
+      "weather_alerts": "వాతావరణ హెచ్చరికలు",
+      "govt_schemes": "ప్రభుత్వ పథకాలు"
+    },
+    "feature_desc": {
+      "crop_rec": "మీ నేల & నీటి ఆధారంగా AI పంట సూచనలు",
+      "disease_detection": "మొక్కలు ఫోటో అప్‌లోడ్ చేసి వ్యాధి తెలుసుకోండి",
+      "market_demand": "ఎక్కువ డిమాండ్ & బెస్ట్ ధరలు కలిగిన పంటలు చూడండి",
+      "farm_jobs": "మీ సమీపంలో వ్యవసాయ పనులు పోస్ట్ చేయండి లేదా వెతకండి",
+      "weather_alerts": "మీ ప్రాంతానికి రియల్-టైమ్ వాతావరణ & విపత్తు హెచ్చరికలు",
+      "govt_schemes": "ఈరోజు దరఖాస్తు చేసుకోగల సబ్సిడీలు & పథకాలు"
+    },
+    "get_started": "ప్రారంభించండి"
+  },
+  "charts": {
+    "farmers_growing": "పంటలు పెంచుకునే రైతులు",
+    "demand_index": "డిమాండ్ ఇండెక్స్",
+    "market_price": "మార్కెట్ ధర",
+    "crop": "పంట",
+    "trend": "ధోరణి"
+  },
+  "cropdemand": {
+    "title": "మార్కెట్ డిమాండ్",
+    "subtitle": "పంట ధరలు, డిమాండ్ ట్రెండ్స్ & మార్కెట్ ఇన్‌సైట్స్",
+    "highest_demand": "అత్యధిక డిమాండ్",
+    "best_price": "బెస్ట్ ధర",
+    "most_grown": "ఎక్కువగా పండించే",
+    "per_quintal": "/క్వింటల్",
+    "farmers_count": "{{count}} రైతులు",
+    "index": "ఇండెక్స్",
+    "price_per_quintal": "₹{{price}}/క్వింటల్",
+    "view": {
+      "bar": "బార్ చార్ట్",
+      "line": "ధర ట్రెండ్",
+      "table": "టేబుల్"
+    },
+    "ai_insight": "💡 AI ఇన్‌సైట్: {{insight}}"
+  },
+  "auth": {
+    "welcome_back": "స్వాగతం తిరిగి",
+    "sign_in_subtitle": "మీ రైతు సేవ అకౌంట్‌లో సైన్ ఇన్ చేయండి",
+    "phone": "ఫోన్ నంబర్",
+    "phone_placeholder": "10 డిజిట్ మొబైల్ నంబర్",
+    "password": "పాస్‌వర్డ్",
+    "password_placeholder": "మీ పాస్‌వర్డ్ ఎంటర్ చేయండి",
+    "sign_in": "సైన్ ఇన్",
+    "create_account": "అకౌంట్‌ను సృష్టించండి",
+    "new_to_rythuseva": "రైతు సేవలో కొత్తయ్యారా?",
+    "join_thousands": "రైతు సేవలో వేలాది రైతులతో చేరండి",
+    "full_name": "పూర్తి పేరు",
+    "location": "స్థానం / జిల్లా",
+    "land_size": "భూమి పరిమాణం (ఎకరాలు)",
+    "water_source": "నీటి మూలం",
+    "your_crops": "మీ పంటలు",
+    "register_farmer": "రైతు నమోదు"
+  },
+  "croprec": {
+    "title": "పంట సిఫార్సు",
+    "subtitle": "మీ భూమి ఆధారంగా AI సూచనలు",
+    "land_details": "భూమి వివరాలు",
+    "soil_type": "నేల రకం",
+    "location_district": "స్థానం / జిల్లా",
+    "water_source": "నీటి మూలం",
+    "land_size_acres": "భూమి పరిమాణం (ఎకరాలు)",
+    "get_recommendations": "సిఫార్సులు పొందండి",
+    "recommended_crops": "సిఫార్సు పంటలు",
+    "yield_per_acre": "ఎకరానికి దిగుబడి",
+    "profit_per_acre": "ఎకరానికి లాభం",
+    "total_profit": "{{amount}} మొత్తం లాభం",
+    "land_division": "స్మార్ట్ భూమి విభజన",
+    "farming_tips": "వ్యవసాయ చిట్కాలు"
+  },
+  "chat": {
+    "ai_assistant": "వ్యవసాయ సహాయకుడు",
+    "thinking": "ఆలోచిస్తున్నారు..."
+  },
+  "profile": {
+    "edit": "సవరించు",
+    "cancel": "రద్దు చేయి",
+    "logout": "లాగ్ అవుట్",
+    "edit_profile": "ప్రొఫైల్ సవరించు",
+    "full_name": "పూర్తి పేరు",
+    "phone": "ఫోన్",
+    "location": "స్థానం",
+    "land_size": "భూమి పరిమాణం (ఎకరాలు)",
+    "water_source": "నీటి మూలం",
+    "save_changes": "మార్పులు సేవ్ చేయి",
+    "saving": "సేవ్ అవుతున్నది...",
+    "crop_searches": "పంట శోధనలు",
+    "disease_reports": "వ్యాధి నివేదికలు",
+    "jobs_posted": "పోస్ట్ చేసిన ఉద్యోగాలు",
+    "crop_history": "పంట చరిత్ర",
+    "disease_history": "వ్యాధి నివేదికలు",
+    "my_jobs": "నా ఉద్యోగాలు",
+    "login_history": "లాగిన్ చరిత్ర",
+    "no_crop_searches": "ఇంకా పంట శోధనలు లేవు.",
+    "no_disease_reports": "ఇంకా వ్యాధి నివేదికలు లేవు.",
+    "no_jobs": "ఇంకా ఉద్యోగాలు పోస్ట్ చేయలేదు.",
+    "no_logins": "ఇంకా లాగిన్ చరిత్ర లేదు.",
+    "applicants": "దరఖాస్తుదారులు",
+    "no_applicants": "ఇంకా దరఖాస్తుదారులు లేరు",
+    "signed_in": "సైన్ ఇన్ చేశారు",
+    "latest": "తాజా",
+    "posted": "పోస్ట్ చేసిన"
+  }
+}

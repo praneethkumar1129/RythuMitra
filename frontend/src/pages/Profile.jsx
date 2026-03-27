@@ -4,6 +4,7 @@ import { User, Leaf, Bug, Briefcase, LogOut, MapPin, Droplets, Layers, Edit2, Sa
 import api from '../api'
 import toast from 'react-hot-toast'
 import { useAuth } from '../context/AuthContext'
+import { useLang } from '../context/LangContext'
 
 const WATER_SOURCES = ['borewell', 'canal', 'rain']
 
@@ -20,6 +21,7 @@ export default function Profile() {
   const [editForm, setEditForm] = useState({})
   const [saving, setSaving]     = useState(false)
   const { logout: authLogout, updateName, farmer_id } = useAuth()
+  const { t } = useLang()
   const navigate = useNavigate()
 
   const load = () => {
@@ -36,7 +38,7 @@ export default function Profile() {
 
   useEffect(() => { load() }, [])
 
-  const logout = () => { authLogout(); toast.success('Logged out'); navigate('/auth') }
+  const logout = () => { authLogout(); toast.success(t('profile.logout')); }
 
   const saveEdit = async () => {
     setSaving(true)
@@ -57,10 +59,10 @@ export default function Profile() {
   const { farmer, disease_reports = [], crop_searches = [], jobs_posted = [], login_history = [] } = data || {}
 
   const TABS = [
-    { key: 'crops',   label: 'Crop History',    icon: <Leaf size={14} />,     count: crop_searches.length },
-    { key: 'disease', label: 'Disease Reports',  icon: <Bug size={14} />,      count: disease_reports.length },
-    { key: 'jobs',    label: 'My Jobs',          icon: <Briefcase size={14} />, count: jobs_posted.length },
-    { key: 'logins',  label: 'Login History',    icon: <LogIn size={14} />,    count: login_history.length },
+    { key: 'crops',   label: t('profile.crop_history'),    icon: <Leaf size={14} />,     count: crop_searches.length },
+    { key: 'disease', label: t('profile.disease_history'),  icon: <Bug size={14} />,      count: disease_reports.length },
+    { key: 'jobs',    label: t('profile.my_jobs'),          icon: <Briefcase size={14} />, count: jobs_posted.length },
+    { key: 'logins',  label: t('profile.login_history'),    icon: <LogIn size={14} />,    count: login_history.length },
   ]
 
   return (
@@ -87,11 +89,11 @@ export default function Profile() {
           <div style={{ display: 'flex', gap: '.5rem' }}>
             <button onClick={() => setEditing(e => !e)}
               style={{ display: 'flex', alignItems: 'center', gap: '.35rem', padding: '.4rem .85rem', borderRadius: 8, border: '1px solid rgba(255,255,255,.3)', background: 'rgba(255,255,255,.12)', color: '#fff', cursor: 'pointer', fontSize: '.83rem', fontWeight: 600, fontFamily: 'inherit' }}>
-              <Edit2 size={14} /> {editing ? 'Cancel' : 'Edit'}
+              <Edit2 size={14} /> {editing ? t('profile.cancel') : t('profile.edit')}
             </button>
             <button onClick={logout}
               style={{ display: 'flex', alignItems: 'center', gap: '.35rem', padding: '.4rem .85rem', borderRadius: 8, border: '1px solid rgba(255,255,255,.3)', background: 'rgba(255,255,255,.12)', color: '#fff', cursor: 'pointer', fontSize: '.83rem', fontWeight: 600, fontFamily: 'inherit' }}>
-              <LogOut size={14} /> Logout
+              <LogOut size={14} /> {t('profile.logout')}
             </button>
           </div>
         </div>
@@ -109,21 +111,21 @@ export default function Profile() {
       {/* Edit Form */}
       {editing && (
         <div className="card fade-up" style={{ borderLeft: '4px solid var(--amber)' }}>
-          <div className="section-title"><Edit2 size={16} color="var(--amber)" /> Edit Profile</div>
+          <div className="section-title"><Edit2 size={16} color="var(--amber)" /> {t('profile.edit_profile')}</div>
           <div className="grid-2">
-            <div className="form-group"><label>Full Name</label><input value={editForm.name} onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))} /></div>
-            <div className="form-group"><label>Phone</label><input value={editForm.phone} onChange={e => setEditForm(f => ({ ...f, phone: e.target.value }))} /></div>
-            <div className="form-group"><label>Location</label><input value={editForm.location} onChange={e => setEditForm(f => ({ ...f, location: e.target.value }))} /></div>
-            <div className="form-group"><label>Land Size (acres)</label><input type="number" step="0.1" value={editForm.land_size} onChange={e => setEditForm(f => ({ ...f, land_size: e.target.value }))} /></div>
+            <div className="form-group"><label>{t('profile.full_name')}</label><input value={editForm.name} onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))} /></div>
+            <div className="form-group"><label>{t('profile.phone')}</label><input value={editForm.phone} onChange={e => setEditForm(f => ({ ...f, phone: e.target.value }))} /></div>
+            <div className="form-group"><label>{t('profile.location')}</label><input value={editForm.location} onChange={e => setEditForm(f => ({ ...f, location: e.target.value }))} /></div>
+            <div className="form-group"><label>{t('profile.land_size')}</label><input type="number" step="0.1" value={editForm.land_size} onChange={e => setEditForm(f => ({ ...f, land_size: e.target.value }))} /></div>
             <div className="form-group">
-              <label>Water Source</label>
+              <label>{t('profile.water_source')}</label>
               <select value={editForm.water_source} onChange={e => setEditForm(f => ({ ...f, water_source: e.target.value }))}>
                 {WATER_SOURCES.map(w => <option key={w}>{w}</option>)}
               </select>
             </div>
           </div>
           <button className="btn btn-primary" onClick={saveEdit} disabled={saving}>
-            <Save size={15} /> {saving ? 'Saving...' : 'Save Changes'}
+            <Save size={15} /> {saving ? t('profile.saving') : t('profile.save_changes')}
           </button>
         </div>
       )}
@@ -131,9 +133,9 @@ export default function Profile() {
       {/* Stats */}
       <div className="grid-3">
         {[
-          { label: 'Crop Searches',   value: crop_searches.length,  color: 'var(--green)', icon: '🌾' },
-          { label: 'Disease Reports', value: disease_reports.length, color: 'var(--red)',   icon: '🐛' },
-          { label: 'Jobs Posted',     value: jobs_posted.length,     color: 'var(--amber)', icon: '💼' },
+          { label: t('profile.crop_searches'),   value: crop_searches.length,  color: 'var(--green)', icon: '🌾' },
+          { label: t('profile.disease_reports'), value: disease_reports.length, color: 'var(--red)',   icon: '🐛' },
+          { label: t('profile.jobs_posted'),     value: jobs_posted.length,     color: 'var(--amber)', icon: '💼' },
         ].map(s => (
           <div key={s.label} className="card" style={{ textAlign: 'center', padding: '1.25rem 1rem' }}>
             <div style={{ fontSize: '1.6rem', marginBottom: '.25rem' }}>{s.icon}</div>
@@ -163,7 +165,7 @@ export default function Profile() {
       {/* Crop History */}
       {tab === 'crops' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
-          {crop_searches.length === 0 && <div className="empty-state card"><Leaf size={40} /><p>No crop searches yet.</p></div>}
+          {crop_searches.length === 0 && <div className="empty-state card"><Leaf size={40} /><p>{t('profile.no_crop_searches')}</p></div>}
           {crop_searches.map((c, i) => (
             <div key={i} className="card" style={{ borderLeft: '4px solid var(--green)' }}>
               <div style={{ fontWeight: 700, marginBottom: '.3rem' }}>{c.location} — {c.soil_type} soil</div>
@@ -182,7 +184,7 @@ export default function Profile() {
       {/* Disease History */}
       {tab === 'disease' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
-          {disease_reports.length === 0 && <div className="empty-state card"><Bug size={40} /><p>No disease reports yet.</p></div>}
+          {disease_reports.length === 0 && <div className="empty-state card"><Bug size={40} /><p>{t('profile.no_disease_reports')}</p></div>}
           {disease_reports.map((r, i) => (
             <div key={i} className="card" style={{ borderLeft: `4px solid ${r.severity === 'High' ? 'var(--red)' : 'var(--amber)'}` }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.3rem' }}>
@@ -200,7 +202,7 @@ export default function Profile() {
       {/* Jobs */}
       {tab === 'jobs' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {jobs_posted.length === 0 && <div className="empty-state card"><Briefcase size={40} /><p>No jobs posted yet.</p></div>}
+          {jobs_posted.length === 0 && <div className="empty-state card"><Briefcase size={40} /><p>{t('profile.no_jobs')}</p></div>}
           {jobs_posted.map((j, i) => (
             <div key={i} className="card" style={{ borderLeft: '4px solid var(--amber)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '.5rem', marginBottom: '.75rem' }}>
@@ -214,10 +216,10 @@ export default function Profile() {
               </div>
               <div style={{ borderTop: '1px solid var(--border)', paddingTop: '.75rem' }}>
                 <div style={{ fontSize: '.8rem', fontWeight: 700, color: 'var(--text-muted)', marginBottom: '.5rem', textTransform: 'uppercase', letterSpacing: '.04em' }}>
-                  Applicants ({j.applicants?.length || 0})
+                  {t('profile.applicants')} ({j.applicants?.length || 0})
                 </div>
                 {(!j.applicants || j.applicants.length === 0) ? (
-                  <p style={{ fontSize: '.85rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>No applicants yet</p>
+                  <p style={{ fontSize: '.85rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>{t('profile.no_applicants')}</p>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '.4rem' }}>
                     {j.applicants.map((a, ai) => (
@@ -231,7 +233,7 @@ export default function Profile() {
                   </div>
                 )}
               </div>
-              <div style={{ fontSize: '.75rem', color: 'var(--text-muted)', marginTop: '.5rem' }}>Posted: {fmt(j.created_at)}</div>
+              <div style={{ fontSize: '.75rem', color: 'var(--text-muted)', marginTop: '.5rem' }}>{t('profile.posted')}: {fmt(j.created_at)}</div>
             </div>
           ))}
         </div>
@@ -240,7 +242,7 @@ export default function Profile() {
       {/* Login History */}
       {tab === 'logins' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '.6rem' }}>
-          {login_history.length === 0 && <div className="empty-state card"><LogIn size={40} /><p>No login history yet.</p></div>}
+          {login_history.length === 0 && <div className="empty-state card"><LogIn size={40} /><p>{t('profile.no_logins')}</p></div>}
           {login_history.map((l, i) => (
             <div key={i} className="card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '.5rem', borderLeft: `4px solid ${i === 0 ? 'var(--green)' : 'var(--border)'}` }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem' }}>
@@ -249,8 +251,8 @@ export default function Profile() {
                 </div>
                 <div>
                   <div style={{ fontWeight: 600, fontSize: '.88rem', display: 'flex', alignItems: 'center', gap: '.4rem' }}>
-                    {i === 0 && <span className="badge badge-green">Latest</span>}
-                    Signed in
+                    {i === 0 && <span className="badge badge-green">{t('profile.latest')}</span>}
+                    {t('profile.signed_in')}
                   </div>
                   <div className="info-row" style={{ marginTop: '.15rem' }}>
                     <MapPin size={12} /> {l.location || 'Unknown'} &nbsp;·&nbsp; {l.device || 'Web'}

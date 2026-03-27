@@ -1,0 +1,143 @@
+{
+  "app": {
+    "title": "Rythu Seva",
+    "tagline": "Your AI Farming Assistant"
+  },
+  "navbar": {
+    "home": "Home",
+    "crops": "Crops",
+    "disease": "Disease",
+    "market": "Market",
+    "jobs": "Jobs",
+    "weather": "Weather",
+    "schemes": "Schemes",
+    "profile": "Profile",
+    "login": "Login"
+  },
+  "common": {
+    "welcome": "Welcome to Rythu Seva. I will help you with crop suggestions, plant disease detection, farming jobs and government schemes.",
+    "speak": "Listen",
+    "toggle_lang_en": "Telugu",
+    "toggle_lang_te": "English",
+    "loading": "Loading...",
+    "analyzing": "Analyzing...",
+    "error": "Something went wrong",
+    "ask_farming": "Ask about crops, schemes...",
+    "ourServices": "Our Services"
+  },
+  "dashboard": {
+    "stats": {
+      "farmers_registered": "Farmers Registered",
+      "diseases_detected": "Diseases Detected",
+      "jobs_posted": "Jobs Posted"
+    },
+    "features": {
+      "crop_rec": "Crop Recommendation",
+      "disease_detection": "Disease Detection",
+      "market_demand": "Market Demand",
+      "farm_jobs": "Farm Jobs",
+      "weather_alerts": "Weather Alerts",
+      "govt_schemes": "Govt Schemes"
+    },
+    "feature_desc": {
+      "crop_rec": "AI-powered crop suggestions based on your soil & water",
+      "disease_detection": "Upload plant photo to detect disease instantly",
+      "market_demand": "See which crops have high demand & best prices",
+      "farm_jobs": "Post or find agricultural work near you",
+      "weather_alerts": "Real-time weather & disaster alerts for your area",
+      "govt_schemes": "Subsidies & schemes you can apply for today"
+    },
+    "get_started": "Get Started"
+  },
+  "charts": {
+    "farmers_growing": "Farmers Growing",
+    "demand_index": "Demand Index",
+    "market_price": "Market Price",
+    "crop": "Crop",
+    "trend": "Trend"
+  },
+  "cropdemand": {
+    "title": "Market Demand",
+    "subtitle": "Crop prices, demand trends and market insights",
+    "highest_demand": "Highest Demand",
+    "best_price": "Best Price",
+    "most_grown": "Most Grown",
+    "per_quintal": "/quintal",
+    "farmers_count": "{{count}} farmers",
+    "index": "Index",
+    "price_per_quintal": "₹{{price}}/quintal",
+    "view": {
+      "bar": "Bar Chart",
+      "line": "Price Trend",
+      "table": "Table"
+    },
+    "ai_insight": "💡 AI Insight: {{insight}}"
+  },
+  "auth": {
+    "welcome_back": "Welcome back",
+    "sign_in_subtitle": "Sign in to your Rythu Seva account",
+    "phone": "Phone Number",
+    "phone_placeholder": "10-digit mobile number",
+    "password": "Password",
+    "password_placeholder": "Enter your password",
+    "sign_in": "Sign In",
+    "create_account": "Create account",
+    "new_to_rythuseva": "New to Rythu Seva?",
+    "join_thousands": "Join thousands of farmers on Rythu Seva",
+    "full_name": "Full Name",
+    "location": "Location / District",
+    "land_size": "Land Size (acres)",
+    "water_source": "Water Source",
+    "your_crops": "Your Crops",
+    "register_farmer": "Register Farmer"
+  },
+  "croprec": {
+    "title": "Crop Recommendation",
+    "subtitle": "AI-powered suggestions based on your land",
+    "land_details": "Land Details",
+    "soil_type": "Soil Type",
+    "location_district": "Location / District",
+    "water_source": "Water Source",
+    "land_size_acres": "Land Size (acres)",
+    "get_recommendations": "Get Recommendations",
+    "recommended_crops": "Recommended Crops",
+    "yield_per_acre": "Yield per acre",
+    "profit_per_acre": "Profit per acre",
+    "total_profit": "{{amount}} total profit",
+    "land_division": "Smart Land Division",
+    "farming_tips": "Farming Tips"
+  },
+  "chat": {
+    "ai_assistant": "Agriculture Assistant",
+    "thinking": "Thinking..."
+  },
+  "profile": {
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "logout": "Logout",
+    "edit_profile": "Edit Profile",
+    "full_name": "Full Name",
+    "phone": "Phone",
+    "location": "Location",
+    "land_size": "Land Size (acres)",
+    "water_source": "Water Source",
+    "save_changes": "Save Changes",
+    "saving": "Saving...",
+    "crop_searches": "Crop Searches",
+    "disease_reports": "Disease Reports",
+    "jobs_posted": "Jobs Posted",
+    "crop_history": "Crop History",
+    "disease_history": "Disease Reports",
+    "my_jobs": "My Jobs",
+    "login_history": "Login History",
+    "no_crop_searches": "No crop searches yet.",
+    "no_disease_reports": "No disease reports yet.",
+    "no_jobs": "No jobs posted yet.",
+    "no_logins": "No login history yet.",
+    "applicants": "Applicants",
+    "no_applicants": "No applicants yet",
+    "signed_in": "Signed in",
+    "latest": "Latest",
+    "posted": "Posted"
+  }
+}

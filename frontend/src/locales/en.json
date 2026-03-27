@@ -105,11 +105,36 @@
     "profit_per_acre": "Profit per acre",
     "total_profit": "{{amount}} total profit",
     "land_division": "Smart Land Division",
-    "farming_tips": "Farming Tips"
+    "land_division_desc": "Divide your land to reduce risk and maximize profit",
+    "farming_tips": "Farming Tips",
+    "acres": "acres",
+    "soil_suffix": "Soil",
+    "fill_details": "Fill in your land details to get AI-powered crop recommendations",
+    "fill_all": "Please fill all fields",
+    "location_placeholder": "e.g. Warangal, Guntur, Nellore"
   },
   "chat": {
     "ai_assistant": "Agriculture Assistant",
     "thinking": "Thinking..."
+  },
+  "disease": {
+    "title": "Disease Detection",
+    "subtitle": "Upload a plant photo for instant AI diagnosis",
+    "crop_type": "Crop Type",
+    "drop_image": "Drop image here or click to upload",
+    "detect_btn": "Detect Disease",
+    "confidence": "Confidence",
+    "severity": "Severity",
+    "symptoms": "Symptoms",
+    "treatment": "Treatment",
+    "organic_remedy": "Organic Remedy",
+    "recommended_pesticides": "Recommended Pesticides",
+    "watch_tutorial": "Watch Tutorial",
+    "buy": "Buy",
+    "empty": "Upload a photo of your plant to detect diseases instantly",
+    "upload_image": "Please upload a plant image",
+    "upload_image_file": "Please upload an image file",
+    "image_size": "Image must be under 5MB"
   },
   "profile": {
     "edit": "Edit",

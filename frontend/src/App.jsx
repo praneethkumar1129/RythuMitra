@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, NavLink, Navigate, useLocation } from 're
 import { Toaster } from 'react-hot-toast'
 import { useState, useEffect } from 'react'
 import { AuthProvider, useAuth } from './context/AuthContext'
-import { LangProvider, useLang } from './context/LangContext'
+import { useLang } from './context/LangContext'
 import { speak } from './components/VoiceAssistant'
 
 import Dashboard        from './pages/Dashboard'
@@ -52,11 +52,11 @@ function Navbar({ lang, t, toggleLang }) {
     }}>
       <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '.65rem 1rem' }}>
 
-        <NavLink to="/" style={{ display: 'flex', alignItems: 'center', gap: '.55rem', fontWeight: 800, fontSize: '1.18rem', color: '#fff', textDecoration: 'none', letterSpacing: '-.3px' }}>
+          <NavLink to="/" style={{ display: 'flex', alignItems: 'center', gap: '.55rem', fontWeight: 800, fontSize: '1.18rem', color: '#fff', textDecoration: 'none', letterSpacing: '-.3px' }}>
           <div style={{ background: 'rgba(255,255,255,.15)', borderRadius: 8, padding: '5px', display: 'flex', alignItems: 'center' }}>
             <Sprout size={18} />
           </div>
-          Rythu Seva
+          {t('app.title')}
         </NavLink>
 
         <button id="menu-btn"
@@ -69,7 +69,7 @@ function Navbar({ lang, t, toggleLang }) {
           {NAV.map(({ to, key, icon: Icon }) => (
             <li key={to}>
               <NavLink to={to} end={to === '/'} style={linkStyle}>
-                <Icon size={14} /> {t('nav', key)}
+                <Icon size={14} /> {t(`navbar.${key}`)}
               </NavLink>
             </li>
           ))}
@@ -79,11 +79,8 @@ function Navbar({ lang, t, toggleLang }) {
             <div style={{
               background: 'rgba(255,255,255,.12)', borderRadius: 7, padding: '.25rem .5rem',
               fontSize: '.8rem', cursor: 'pointer', position: 'relative', minWidth: 36, textAlign: 'center'
-            }} onClick={() => {
-              const idx = ['te','hi','kn','ta','ml','en'].indexOf(lang)
-              toggleLang(['te','en'][(idx + 1) % 2])
-            }}>
-              {langNames[lang] || 'EN'}
+            }} onClick={toggleLang}>
+              {lang === 'te' ? t('common.toggle_lang_te') : t('common.toggle_lang_en')}
             </div>
           </li>
 
@@ -104,7 +101,7 @@ function Navbar({ lang, t, toggleLang }) {
                 border: '1px solid rgba(255,255,255,.2)',
                 fontWeight: 600,
               })}>
-                <User size={14} /> {t('nav', 'profile')}
+                <User size={14} /> {t('navbar.profile')}
               </NavLink>
             ) : (
               <NavLink to="/auth" style={() => ({
@@ -113,7 +110,7 @@ function Navbar({ lang, t, toggleLang }) {
                 color: 'var(--green)', fontSize: '.83rem', fontWeight: 700,
                 background: '#fff', boxShadow: '0 1px 4px rgba(0,0,0,.12)',
               })}>
-                <LogIn size={14} /> {t('nav', 'login')}
+                <LogIn size={14} /> {t('navbar.login')}
               </NavLink>
             )}
           </li>
@@ -145,16 +142,12 @@ function GuestOnly({ children }) {
 function AppRoutes() {
   const { lang, t, toggleLang } = useLang()
 
-  // Auto welcome voice on first load
+  // Sync document language
   useEffect(() => {
-    if (!sessionStorage.getItem('welcomePlayed')) {
-      const timer = setTimeout(() => {
-        speak(t('common', 'welcome') || 'Welcome to Rythu Seva', lang)
-        sessionStorage.setItem('welcomePlayed', 'true')
-      }, 1000)
-      return () => clearTimeout(timer)
-    }
-  }, [lang, t])
+    document.documentElement.lang = lang
+  }, [lang])
+
+  // Welcome speak moved to Dashboard for mobile gesture compliance
 
   return (
     <>
@@ -175,7 +168,7 @@ function AppRoutes() {
           <Route path="*"        element={<Navigate to="/" replace />} />
         </Routes>
       </main>
-      <ChatBot lang={lang} />
+      <ChatBot />
       <InstallPWA />
     </>
   )
@@ -185,10 +178,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <LangProvider>
-          <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
-          <AppRoutes />
-        </LangProvider>
+        <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
+        <AppRoutes />
       </AuthProvider>
     </BrowserRouter>
   )

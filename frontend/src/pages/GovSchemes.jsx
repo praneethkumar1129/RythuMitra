@@ -1,17 +1,24 @@
 import { useEffect, useState } from 'react'
+import { useLang } from '../context/LangContext'
 import { BookOpen, ExternalLink, ChevronDown, ChevronUp } from 'lucide-react'
 import api from '../api'
 
 const CATEGORIES = ['All', 'Income Support', 'Crop Insurance', 'Credit', 'Soil & Fertilizer', 'State Scheme']
 const CATEGORY_STYLE = {
-  'Income Support':   { bg: '#e8f5e9', color: '#2d7a3a' },
-  'Crop Insurance':   { bg: '#eff6ff', color: '#3b82f6' },
-  'Credit':           { bg: '#fef3c7', color: '#b45309' },
-  'Soil & Fertilizer':{ bg: '#f3e8ff', color: '#7c3aed' },
-  'State Scheme':     { bg: '#fce7f3', color: '#be185d' },
+  'Income Support':    { bg: '#e8f5e9', color: '#2d7a3a' },
+  'Crop Insurance':    { bg: '#eff6ff', color: '#3b82f6' },
+  'Credit':            { bg: '#fef3c7', color: '#b45309' },
+  'Soil & Fertilizer': { bg: '#f3e8ff', color: '#7c3aed' },
+  'State Scheme':      { bg: '#fce7f3', color: '#be185d' },
+}
+
+const TE_CATEGORIES = {
+  'All': 'అన్నీ', 'Income Support': 'ఆదాయ మద్దతు', 'Crop Insurance': 'పంట బీమా',
+  'Credit': 'రుణం', 'Soil & Fertilizer': 'నేల & ఎరువు', 'State Scheme': 'రాష్ట్ర పథకం'
 }
 
 export default function GovSchemes() {
+  const { t, lang } = useLang()
   const [schemes, setSchemes]   = useState([])
   const [filtered, setFiltered] = useState([])
   const [category, setCategory] = useState('All')
@@ -34,18 +41,20 @@ export default function GovSchemes() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
 
-      {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem' }}>
         <div style={{ background: '#f3e8ff', borderRadius: 10, padding: '8px', display: 'flex' }}>
           <BookOpen size={22} color="#7c3aed" />
         </div>
         <div>
-          <h1 style={{ fontSize: '1.4rem', fontWeight: 800, letterSpacing: '-.3px' }}>Government Schemes</h1>
-          <p style={{ fontSize: '.83rem', color: 'var(--text-muted)', marginTop: '.1rem' }}>Subsidies & schemes you can apply for today</p>
+          <h1 style={{ fontSize: '1.4rem', fontWeight: 800, letterSpacing: '-.3px' }}>
+            {lang === 'te' ? 'ప్రభుత్వ పథకాలు' : 'Government Schemes'}
+          </h1>
+          <p style={{ fontSize: '.83rem', color: 'var(--text-muted)', marginTop: '.1rem' }}>
+            {lang === 'te' ? 'ఈరోజు దరఖాస్తు చేసుకోగల సబ్సిడీలు & పథకాలు' : 'Subsidies & schemes you can apply for today'}
+          </p>
         </div>
       </div>
 
-      {/* Filter tabs */}
       <div style={{ display: 'flex', gap: '.35rem', flexWrap: 'wrap' }}>
         {CATEGORIES.map(c => (
           <button key={c} onClick={() => setCategory(c)}
@@ -56,29 +65,29 @@ export default function GovSchemes() {
               color: category === c ? '#fff' : 'var(--green)',
               borderColor: 'var(--green)',
             }}>
-            {c}
+            {lang === 'te' ? TE_CATEGORIES[c] : c}
           </button>
         ))}
       </div>
 
-      {/* Scheme count */}
       <p style={{ fontSize: '.83rem', color: 'var(--text-muted)', marginTop: '-.75rem' }}>
-        Showing {filtered.length} scheme{filtered.length !== 1 ? 's' : ''}
+        {lang === 'te' ? `${filtered.length} పథకాలు చూపిస్తున్నారు` : `Showing ${filtered.length} scheme${filtered.length !== 1 ? 's' : ''}`}
       </p>
 
-      {/* Schemes list */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '.85rem' }}>
         {filtered.map(scheme => {
           const style = CATEGORY_STYLE[scheme.category] || { bg: 'var(--green-pale)', color: 'var(--green)' }
           const isOpen = expanded === scheme.id
           return (
-            <div key={scheme.id} className="card" style={{ cursor: 'pointer', transition: 'box-shadow .15s' }}
+            <div key={scheme.id} className="card" style={{ cursor: 'pointer' }}
               onClick={() => setExpanded(isOpen ? null : scheme.id)}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem', marginBottom: '.35rem', flexWrap: 'wrap' }}>
                     <span style={{ fontWeight: 800, fontSize: '1rem' }}>{scheme.name}</span>
-                    <span className="badge" style={{ background: style.bg, color: style.color }}>{scheme.category}</span>
+                    <span className="badge" style={{ background: style.bg, color: style.color }}>
+                      {lang === 'te' ? TE_CATEGORIES[scheme.category] || scheme.category : scheme.category}
+                    </span>
                   </div>
                   <p style={{ fontSize: '.85rem', color: 'var(--text-muted)', marginBottom: '.3rem' }}>{scheme.full_name}</p>
                   <p style={{ fontSize: '.88rem', color: 'var(--green)', fontWeight: 600 }}>💰 {scheme.benefit}</p>
@@ -93,24 +102,30 @@ export default function GovSchemes() {
                   onClick={e => e.stopPropagation()}>
                   <div className="grid-2" style={{ marginBottom: '1rem' }}>
                     <div style={{ padding: '.75rem', background: 'var(--bg)', borderRadius: 8, border: '1px solid var(--border)' }}>
-                      <p style={{ fontSize: '.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.04em', marginBottom: '.35rem' }}>Eligibility</p>
+                      <p style={{ fontSize: '.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.04em', marginBottom: '.35rem' }}>
+                        {lang === 'te' ? 'అర్హత' : 'Eligibility'}
+                      </p>
                       <p style={{ fontSize: '.88rem', lineHeight: 1.6 }}>{scheme.eligibility}</p>
                     </div>
                     <div style={{ padding: '.75rem', background: 'var(--bg)', borderRadius: 8, border: '1px solid var(--border)' }}>
-                      <p style={{ fontSize: '.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.04em', marginBottom: '.35rem' }}>How to Apply</p>
+                      <p style={{ fontSize: '.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.04em', marginBottom: '.35rem' }}>
+                        {lang === 'te' ? 'దరఖాస్తు ఎలా చేయాలి' : 'How to Apply'}
+                      </p>
                       <p style={{ fontSize: '.88rem', lineHeight: 1.6 }}>{scheme.how_to_apply}</p>
                     </div>
                   </div>
 
                   <div style={{ marginBottom: '1rem' }}>
-                    <p style={{ fontSize: '.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.04em', marginBottom: '.5rem' }}>Documents Required</p>
+                    <p style={{ fontSize: '.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.04em', marginBottom: '.5rem' }}>
+                      {lang === 'te' ? 'అవసరమైన పత్రాలు' : 'Documents Required'}
+                    </p>
                     <div style={{ display: 'flex', gap: '.4rem', flexWrap: 'wrap' }}>
                       {scheme.documents.map(d => <span key={d} className="badge badge-blue">{d}</span>)}
                     </div>
                   </div>
 
                   <a href={scheme.link} target="_blank" rel="noreferrer" className="btn btn-primary btn-sm">
-                    <ExternalLink size={13} /> Apply Online
+                    <ExternalLink size={13} /> {lang === 'te' ? 'ఆన్లైన్లో దరఖాస్తు చేయండి' : 'Apply Online'}
                   </a>
                 </div>
               )}
@@ -122,7 +137,7 @@ export default function GovSchemes() {
       {filtered.length === 0 && (
         <div className="empty-state card">
           <BookOpen size={44} />
-          <p>No schemes found for this category</p>
+          <p>{lang === 'te' ? 'ఈ వర్గానికి పథకాలు లేవు' : 'No schemes found for this category'}</p>
         </div>
       )}
     </div>

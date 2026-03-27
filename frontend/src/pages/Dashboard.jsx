@@ -4,23 +4,23 @@ import { Sprout, Leaf, Bug, Briefcase, BookOpen, Cloud, BarChart2, Volume2, Arro
 import { Link } from 'react-router-dom'
 import { speak } from '../components/VoiceAssistant'
 
-const FEATURES = [
-  { to: '/crops',   icon: Leaf,      label: 'Crop Recommendation', desc: 'AI-powered crop suggestions based on your soil & water',  color: '#2d7a3a', bg: '#e8f5e9' },
-  { to: '/disease', icon: Bug,       label: 'Disease Detection',   desc: 'Upload plant photo to detect disease instantly',           color: '#ef4444', bg: '#fee2e2' },
-  { to: '/demand',  icon: BarChart2, label: 'Market Demand',       desc: 'See which crops have high demand & best prices',           color: '#3b82f6', bg: '#eff6ff' },
-  { to: '/jobs',    icon: Briefcase, label: 'Farm Jobs',           desc: 'Post or find agricultural work near you',                 color: '#f59e0b', bg: '#fffbeb' },
-  { to: '/weather', icon: Cloud,     label: 'Weather Alerts',      desc: 'Real-time weather & disaster alerts for your area',       color: '#06b6d4', bg: '#ecfeff' },
-  { to: '/schemes', icon: BookOpen,  label: 'Govt Schemes',        desc: 'Subsidies & schemes you can apply for today',             color: '#8b5cf6', bg: '#f5f3ff' },
-]
-
-const STATS = [
-  { label: 'Farmers Registered', value: '12,400+', color: 'var(--green)' },
-  { label: 'Diseases Detected',  value: '3,200+',  color: 'var(--red)' },
-  { label: 'Jobs Posted',        value: '890+',    color: 'var(--amber)' },
-]
-
 export default function Dashboard() {
   const { lang, t } = useLang()
+
+  const FEATURES = [
+    { to: '/crops',   icon: Leaf,      label: t('dashboard.features.crop_rec'), desc: t('dashboard.feature_desc.crop_rec'),  color: '#2d7a3a', bg: '#e8f5e9' },
+    { to: '/disease', icon: Bug,       label: t('dashboard.features.disease_detection'), desc: t('dashboard.feature_desc.disease_detection'), color: '#ef4444', bg: '#fee2e2' },
+    { to: '/demand',  icon: BarChart2, label: t('dashboard.features.market_demand'), desc: t('dashboard.feature_desc.market_demand'), color: '#3b82f6', bg: '#eff6ff' },
+    { to: '/jobs',    icon: Briefcase, label: t('dashboard.features.farm_jobs'), desc: t('dashboard.feature_desc.farm_jobs'), color: '#f59e0b', bg: '#fffbeb' },
+    { to: '/weather', icon: Cloud,     label: t('dashboard.features.weather_alerts'), desc: t('dashboard.feature_desc.weather_alerts'), color: '#06b6d4', bg: '#ecfeff' },
+    { to: '/schemes', icon: BookOpen,  label: t('dashboard.features.govt_schemes'), desc: t('dashboard.feature_desc.govt_schemes'), color: '#8b5cf6', bg: '#f5f3ff' },
+  ]
+
+  const STATS = [
+    { label: t('dashboard.stats.farmers_registered'), value: '12,400+', color: 'var(--green)' },
+    { label: t('dashboard.stats.diseases_detected'),  value: '3,200+',  color: 'var(--red)' },
+    { label: t('dashboard.stats.jobs_posted'),        value: '890+',    color: 'var(--amber)' },
+  ]
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
@@ -38,24 +38,24 @@ export default function Dashboard() {
           <div style={{ background: 'rgba(255,255,255,.15)', borderRadius: 14, padding: '12px', display: 'flex' }}>
             <Sprout size={36} />
           </div>
-          <div>
-            <h1 style={{ fontSize: '2.2rem', fontWeight: 800, letterSpacing: '-.5px', lineHeight: 1 }}>Rythu Seva</h1>
-            <p style={{ opacity: .75, fontSize: '.95rem', marginTop: '.2rem' }}>రైతు సేవ — Your AI Farming Assistant</p>
-          </div>
+        <div>
+          <h1 style={{ fontSize: '2.2rem', fontWeight: 800, letterSpacing: '-.5px', lineHeight: 1 }}>{t('app.title')}</h1>
+          <p style={{ opacity: .75, fontSize: '.95rem', marginTop: '.2rem' }}>{t('app.tagline')}</p>
+        </div>
         </div>
 
         <p style={{ fontSize: '1rem', lineHeight: 1.7, marginBottom: '1.5rem', opacity: .88, maxWidth: 560 }}>
-          {t('common', 'welcome')}
+{t('common.welcome')}
         </p>
 
         <div style={{ display: 'flex', gap: '.75rem', flexWrap: 'wrap' }}>
           <button className="btn" style={{ background: 'rgba(255,255,255,.15)', color: '#fff', border: '1px solid rgba(255,255,255,.25)' }}
-            onClick={() => speak(t('common', 'welcome'), lang)}>
-            <Volume2 size={16} /> {t('common', 'speak')}
+onClick={() => speak(t('common.welcome'), lang)}>
+            <Volume2 size={16} /> {t('common.speak')}
           </button>
           {/* Global toggle in navbar, remove local */}
           <Link to="/auth?tab=register" className="btn" style={{ background: '#fff', color: 'var(--green)', fontWeight: 700 }}>
-            Get Started <ArrowRight size={15} />
+            {t('dashboard.get_started')} <ArrowRight size={15} />
           </Link>
         </div>
       </div>
@@ -73,7 +73,7 @@ export default function Dashboard() {
       {/* Features */}
       <div>
         <div className="section-title" style={{ marginBottom: '1.1rem' }}>
-          <Sprout size={18} color="var(--green)" /> {t('common', 'ourServices')}
+          <Sprout size={18} color="var(--green)" /> {t('common.ourServices')}
         </div>
         <div className="grid-2">
           {FEATURES.map(({ to, icon: Icon, label, desc, color, bg }) => (
